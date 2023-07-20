@@ -9,10 +9,10 @@ public class RegisterDto {
 	@Email
 	private String email;
 	
-	@Size(min=3)
+	@Size(min=3, max=255)
 	private String username;
 	
-	@Size(min=8)
+	@Size(min=8, max=255)
 	private String password;
 
 	public String getEmail() {

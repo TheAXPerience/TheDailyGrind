@@ -5,6 +5,9 @@
     <title>Plan My Day - Register User</title>
   </head>
   <body>
+  	<div align="right">
+  	  <a href="/login">Log Into Account</a>
+  	</div>
     <h1 align="center">Register New User</h1>
     <form th:action="@{/register/}" th:object="${registerDto}" th:method="POST">
       <div align="center" th:if="${#fields.hasErrors('*')}">

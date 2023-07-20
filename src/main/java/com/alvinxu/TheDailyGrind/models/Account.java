@@ -20,6 +20,12 @@ public class Account {
 	
 	@Column
 	private String password;
+	
+	/*
+	 * USER or ADMIN
+	 */
+	@Column(columnDefinition = "varchar(8) default 'USER'")
+	private String authority = "USER";
 
 	public Long getId() {
 		return id;
@@ -52,6 +58,12 @@ public class Account {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
+
+	public String getAuthority() {
+		return authority;
+	}
+
+	public void setAuthority(String authority) {
+		this.authority = authority;
+	}
 }

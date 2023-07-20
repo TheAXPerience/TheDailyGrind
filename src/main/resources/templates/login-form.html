@@ -5,8 +5,11 @@
     <title>Plan My Day - Log In User</title>
   </head>
   <body>
+  	<div align="right">
+  	  <a href="/register">Register New Account</a>
+  	</div>
     <h1 align="center">Log Into Account</h1>
-    <form th:action="@{/login/}" th:method="POST">
+    <form th:action="@{/login}" th:method="POST">
       <div align="center" th:if="${param.error}">
         <p>Invalid Username or Password.</p>
       </div>

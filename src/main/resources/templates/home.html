@@ -5,6 +5,12 @@
     <title>Plan My Day</title>
   </head>
   <body>
+  	<div align="right">
+  	  <a href="/logout">Logout</a>
+  	</div>
     <h1>Plan My Day</h1>
+    <h2 th:text="${user.getUsername()}"></h2>
+    <p th:text="${user.getId()}"></p>
+    <p th:text="${authority}"></p>
   </body>
 </html>

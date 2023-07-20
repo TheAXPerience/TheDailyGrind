@@ -1,6 +1,9 @@
 package com.alvinxu.TheDailyGrind.controllers;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.alvinxu.TheDailyGrind.dto.RegisterDto;
+import com.alvinxu.TheDailyGrind.models.Account;
 import com.alvinxu.TheDailyGrind.services.AccountService;
 
 import jakarta.validation.Valid;
@@ -17,8 +21,34 @@ public class AccountController {
 	@Autowired
 	private AccountService accountService;
 	
+	private Account getAccountFromPrincipal(Principal principal) throws UsernameNotFoundException {
+		Account user = this.accountService.getAccountByEmail(principal.getName());
+		if (user == null) {
+			throw new UsernameNotFoundException("The authenticated email was not found in the database.");
+		}
+		return user;
+	}
+	
 	@GetMapping("/")
-	public String home() {
+	public String index(Principal principal) {
+		if (principal == null) {
+			return "redirect:/login";
+		}
+		return "redirect:/home";
+	}
+	
+	@GetMapping("/home")
+	public String home(Model model, Principal principal) {
+		if (principal == null) {
+			return "redirect:/login";
+		}
+		Account currentUser = getAccountFromPrincipal(principal);
+		model.addAttribute("user", currentUser);
+		if (currentUser.getAuthority() == null) {
+			model.addAttribute("authority", "null");
+		} else {
+			model.addAttribute("authority", currentUser.getAuthority());
+		}
 		return "home";
 	}
 	
@@ -50,8 +80,10 @@ public class AccountController {
 		return "login-form";
 	}
 	
+	/*
 	@PostMapping("/login/")
 	public String handle_login() {
 		return "redirect:/";
 	}
+	*/
 }
