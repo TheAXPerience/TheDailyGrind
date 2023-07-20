@@ -11,7 +11,7 @@
     <h1 align="center">Log Into Account</h1>
     <form th:action="@{/login}" th:method="POST">
       <div align="center" th:if="${param.error}">
-        <p>Invalid Username or Password.</p>
+        <p>Invalid Email or Password.</p>
       </div>
       <div align="center" th:if="${param.registered}">
         <p>Account has been created.</p>
@@ -25,7 +25,7 @@
       </div>
       <div align="center">
         <label>Password</label>
-        <input type="text" placeholder="Password" name="password" />
+        <input type="password" placeholder="Password" name="password" />
       </div>
       <div align="center">
         <button type="submit" class="button">Login</button>

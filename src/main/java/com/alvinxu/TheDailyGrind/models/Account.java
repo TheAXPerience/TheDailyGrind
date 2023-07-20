@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 public class Account {
@@ -20,9 +22,10 @@ public class Account {
 	
 	@Column
 	private String password;
-	/*
+	
 	@Column
-	private java.util.Date date_of_birth; */
+	@Temporal(TemporalType.DATE)
+	private java.util.Date date_of_birth;
 	
 	/*
 	 * USER or ADMIN
@@ -68,5 +71,13 @@ public class Account {
 
 	public void setAuthority(String authority) {
 		this.authority = authority;
+	}
+
+	public java.util.Date getDate_of_birth() {
+		return date_of_birth;
+	}
+
+	public void setDate_of_birth(java.util.Date date_of_birth) {
+		this.date_of_birth = date_of_birth;
 	}
 }

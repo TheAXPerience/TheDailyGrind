@@ -28,8 +28,9 @@ public class AccountService {
 		Account user = new Account();
 		user.setEmail(registerForm.getEmail());
 		user.setUsername(registerForm.getUsername());
-		// TODO: password encoding
 		user.setPassword(passwordEncoder.encode(registerForm.getPassword()));
+		user.setAuthority("USER");
+		user.setDate_of_birth(registerForm.getDate_of_birth());
 		accountRepository.save(user);
 		
 		return true;

@@ -44,11 +44,6 @@ public class AccountController {
 		}
 		Account currentUser = getAccountFromPrincipal(principal);
 		model.addAttribute("user", currentUser);
-		if (currentUser.getAuthority() == null) {
-			model.addAttribute("authority", "null");
-		} else {
-			model.addAttribute("authority", currentUser.getAuthority());
-		}
 		return "home";
 	}
 	
@@ -73,6 +68,11 @@ public class AccountController {
 		}
 		
 		return "redirect:/login?registered=true";
+	}
+	
+	@GetMapping("/register/termsofservice")
+	public String terms_of_service() {
+		return "termsofservice";
 	}
 	
 	@GetMapping("/login")

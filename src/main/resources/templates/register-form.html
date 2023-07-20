@@ -9,29 +9,33 @@
   	  <a href="/login">Log Into Account</a>
   	</div>
     <h1 align="center">Register New User</h1>
+<!--     <input type="date" /> -->
+<!--     <input type="time" /> -->
     <form th:action="@{/register/}" th:object="${registerDto}" th:method="POST">
       <div align="center" th:if="${#fields.hasErrors('*')}">
-      	<ul>
-        	<li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
-        </ul>
+        <p th:each="err: ${#fields.errors('*')}" th:text="${err}"></p>
       </div>
+      <table align="center">
+        <tr>
+          <td></td>
+          <td><input type="email" placeholder="Email" th:field="*{email}" /></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="text" placeholder="Username" th:field="*{username}" /></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="password" placeholder="Password" th:field="*{password}" /></td>
+        </tr>
+        <tr>
+          <td><label>Date of Birth</label></td>
+          <td><input type="date" placeholder="Date of Birth" th:field="*{date_of_birth}" /></td>
+        </tr>
+      </table>
       <div align="center">
-<!--         <label>Email</label> -->
-        <input type="email" placeholder="Email" th:field="*{email}" />
-      </div>
-      <div align="center">
-<!--         <label>User Name</label> -->
-        <input type="text" placeholder="Username" th:field="*{username}" />
-      </div>
-      <div align="center">
-<!--         <label>Password</label> -->
-        <input type="text" placeholder="Password" th:field="*{password}" />
-      </div>
-      <div align="center">
-        <label>Date of Birth</label>
-        <input type="date" placeholder="Password" th:field="*{password}" />
-      </div>
-      <div align="center">
+      	<input type="checkbox" th:field="*{tos_agree}"/> <label>I have read and agree to the <a href="/register/termsofservice" target="_blank" rel="noopener noreferrer">Terms of Service</a>.</label>
+      	<br/>
         <button type="submit" class="button">Submit</button>
       </div>
     </form>
