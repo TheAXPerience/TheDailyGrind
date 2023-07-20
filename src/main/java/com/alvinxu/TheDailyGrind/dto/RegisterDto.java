@@ -14,6 +14,9 @@ public class RegisterDto {
 	
 	@Size(min=8, max=255)
 	private String password;
+	
+	@NotEmpty
+	private java.util.Date date_of_birth;
 
 	public String getEmail() {
 		return email;

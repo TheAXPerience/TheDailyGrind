@@ -20,6 +20,9 @@ public class Account {
 	
 	@Column
 	private String password;
+	/*
+	@Column
+	private java.util.Date date_of_birth; */
 	
 	/*
 	 * USER or ADMIN
