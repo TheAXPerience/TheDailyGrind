@@ -28,7 +28,7 @@
       	  </tr>
       	  <tr>
       	    <td>Date and Time</td>
-      	    <td th:text="${event.getDateOfEvent()}"></td>
+      	    <td th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
       	  </tr>
       	  <tr>
       	    <td></td>
@@ -42,7 +42,7 @@
       <br/>
       <div th:each="entry: ${entry_list}" align="center">
         <h3 th:text="${entry.getTitle()}"></h3>
-        Date: <span th:text="${entry.getDateCreated()}"></span><br/>
+        Date: <span th:text="${#dates.format(entry.getDateCreated(), 'MM/dd/yyyy')}"></span><br/>
         <p th:text="${entry.getEntry()}"></p>
       </div>
     </div>

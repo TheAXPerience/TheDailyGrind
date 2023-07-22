@@ -25,7 +25,7 @@ public class Account {
 	
 	@Column
 	@Temporal(TemporalType.DATE)
-	private java.util.Date date_of_birth;
+	private java.util.Date dateOfBirth;
 	
 	/*
 	 * USER or ADMIN
@@ -73,11 +73,11 @@ public class Account {
 		this.authority = authority;
 	}
 
-	public java.util.Date getDate_of_birth() {
-		return date_of_birth;
+	public java.util.Date getDateOfBirth() {
+		return dateOfBirth;
 	}
 
-	public void setDate_of_birth(java.util.Date date_of_birth) {
-		this.date_of_birth = date_of_birth;
+	public void setDateOfBirth(java.util.Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 }
