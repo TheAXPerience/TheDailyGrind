@@ -7,6 +7,8 @@ import com.alvinxu.TheDailyGrind.validators.DateFormatConstraint;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 public class RegisterDto {
@@ -14,17 +16,18 @@ public class RegisterDto {
 	@Email
 	private String email;
 	
-	@Size(min=3, max=255, message="Username must be at least 3 characters long")
+	@Size(min=3, max=255, message="Username must be at least 3 characters long.")
 	private String username;
 	
-	@Size(min=8, max=255, message="Password must be at least 8 characters long")
+	@Size(min=8, max=255, message="Password must be at least 8 characters long.")
 	private String password;
 	
-	@DateFormatConstraint(message="Invalid date format submitted.")
+	@Past(message="Date of Birth cannot be in the future.")
+	@NotNull(message="Date of Birth must be entered.")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private java.util.Date date_of_birth;
 	
-	@AssertTrue(message="Must agree to the Terms of Service")
+	@AssertTrue(message="Must agree to the Terms of Service.")
 	private boolean tos_agree;
 
 	public String getEmail() {

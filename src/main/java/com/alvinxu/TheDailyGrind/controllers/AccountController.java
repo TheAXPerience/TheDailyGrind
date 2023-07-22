@@ -21,30 +21,12 @@ public class AccountController {
 	@Autowired
 	private AccountService accountService;
 	
-	private Account getAccountFromPrincipal(Principal principal) throws UsernameNotFoundException {
-		Account user = this.accountService.getAccountByEmail(principal.getName());
-		if (user == null) {
-			throw new UsernameNotFoundException("The authenticated email was not found in the database.");
-		}
-		return user;
-	}
-	
 	@GetMapping("/")
 	public String index(Principal principal) {
 		if (principal == null) {
 			return "redirect:/login";
 		}
 		return "redirect:/home";
-	}
-	
-	@GetMapping("/home")
-	public String home(Model model, Principal principal) {
-		if (principal == null) {
-			return "redirect:/login";
-		}
-		Account currentUser = getAccountFromPrincipal(principal);
-		model.addAttribute("user", currentUser);
-		return "home";
 	}
 	
 	@GetMapping("/register")

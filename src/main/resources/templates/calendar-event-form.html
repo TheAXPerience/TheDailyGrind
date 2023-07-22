@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Plan My Day - Create New Event</title>
+  </head>
+  <body>
+  	<div align="right">
+  	  <a href="/home">Return Home</a>
+  	  <span> | </span>
+  	  <a href="/logout">Logout</a>
+  	</div>
+    <h1 align="center">New Calendar Event</h1>
+    <form th:action="@{/new-calendar-event/}" th:object="${calendarEventDto}" th:method="POST">
+      <div align="center" th:if="${#fields.hasErrors('*')}">
+        <p th:each="err: ${#fields.errors('*')}" th:text="${err}"></p>
+      </div>
+      <table align="center">
+        <tr>
+          <td><label>Date and Time</label></td>
+          <td><input type="datetime-local" placeholder="Date of Event" th:field="*{date_of_event}" /></td>
+        </tr>
+        <tr>
+          <td><label>Event Name</label></td>
+          <td><input type="text" placeholder="Event Name" th:field="*{event_name}" /></td>
+        </tr>
+        <tr>
+          <td><label>Event Description</label></td>
+          <td><textarea placeholder="Description" th:field="*{description}"></textarea></td>
+        </tr>
+        <tr>
+          <td>Make event public?</td>
+          <td><input type="checkbox" th:field="*{is_public}"/></td>
+        </tr>
+      </table>
+      <div align="center">
+        <button type="submit" class="button">Submit</button>
+      </div>
+    </form>
+  </body>
+</html>

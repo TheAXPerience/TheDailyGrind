@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Plan My Day - Create New Diary Entry</title>
+  </head>
+  <body>
+  	<div align="right">
+  	  <a href="/home">Return Home</a>
+  	  <span> | </span>
+  	  <a href="/logout">Logout</a>
+  	</div>
+    <h1 align="center">New Diary Entry</h1>
+    <form th:action="@{/new-diary-entry/}" th:object="${diaryEntryDto}" th:method="POST">
+      <div align="center" th:if="${#fields.hasErrors('*')}">
+        <p th:each="err: ${#fields.errors('*')}" th:text="${err}"></p>
+      </div>
+      <table align="center">
+        <tr>
+          <td><label>Title</label></td>
+          <td><input type="text" placeholder="Title" th:field="*{title}" /></td>
+        </tr>
+        <tr>
+          <td><textarea placeholder="Entry" th:field="*{entry}"></textarea></td>
+        </tr>
+      </table>
+      <div align="center">
+        <button type="submit" class="button">Submit</button>
+      </div>
+    </form>
+  </body>
+</html>
