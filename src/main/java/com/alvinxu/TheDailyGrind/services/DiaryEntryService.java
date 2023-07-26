@@ -27,11 +27,12 @@ public class DiaryEntryService {
 			return false;
 		}
 		
-		DiaryEntry cevent = new DiaryEntry();
-		cevent.setDiaryOwner(user);
-		cevent.setTitle(dto.getTitle());
-		cevent.setEntry(dto.getEntry());
-		this.diaryEntryRepository.save(cevent);
+		DiaryEntry dentry = new DiaryEntry();
+		dentry.setDiaryOwner(user);
+		dentry.setTitle(dto.getTitle());
+		dentry.setEntry(dto.getEntry());
+		dentry.setDateOfEntry(dto.getDate_of_entry());
+		this.diaryEntryRepository.save(dentry);
 		
 		return true;
 	}

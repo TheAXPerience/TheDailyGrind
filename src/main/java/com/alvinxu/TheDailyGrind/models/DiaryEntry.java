@@ -43,6 +43,10 @@ public class DiaryEntry {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateUpdated; // date last edited
 	
+	@Column
+	@Temporal(TemporalType.DATE)
+	private Date dateOfEntry;
+	
 	@Column(columnDefinition="VARCHAR(255) not null")
 	private String title;
 	
@@ -95,6 +99,14 @@ public class DiaryEntry {
 
 	public void setEntry(String entry) {
 		this.entry = entry;
+	}
+
+	public Date getDateOfEntry() {
+		return dateOfEntry;
+	}
+
+	public void setDateOfEntry(Date dateOfEntry) {
+		this.dateOfEntry = dateOfEntry;
 	}
 	
 	

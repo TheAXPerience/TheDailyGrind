@@ -1,5 +1,6 @@
 package com.alvinxu.TheDailyGrind.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,45 @@ public class CalendarEventService {
 		return true;
 	}
 	
-	public List<CalendarEvent> getAllEventsOfAccount(Account user) {
-		return this.calendarEventRepository.findAllByAccountId(user.getId());
+	// TODO
+	public void updateCalendarEvent(long ceid, CalendarEventDto dto, String userEmail) {
+		// edit
+		// the dto is currently a placeholder
+		// must verify user is the event owner
+	}
+	
+	// TODO
+	public void deleteCalendarEvent(long ceid, String userEmail) {
+		// delete
+		// must verify user is the event owner
+	}
+	
+	public List<CalendarEvent> getAllEventsOfAccount(
+			long userId,
+			boolean sameUser
+	) {
+		return this.calendarEventRepository.findAllByAccountId(
+				userId, sameUser);
+	}
+	
+	// TODO
+	public List<CalendarEvent> getAllEventsAfterDate(
+			long userId,
+			boolean isUser,
+			LocalDateTime originDate
+	) {
+		return this.calendarEventRepository.findAllOfAccountAfterDate(
+				userId, isUser, originDate);
+	}
+	
+	// TODO
+	public List<CalendarEvent> getAllEventsBetweenDates(
+			long userId,
+			boolean isUser,
+			LocalDateTime startDate,
+			LocalDateTime endDate
+	) {
+		return this.calendarEventRepository.findAllOfAccountBetweenDates(
+				userId, isUser, startDate, endDate);
 	}
 }

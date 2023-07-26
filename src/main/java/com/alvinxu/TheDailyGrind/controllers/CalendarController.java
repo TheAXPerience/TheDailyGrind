@@ -1,6 +1,9 @@
 package com.alvinxu.TheDailyGrind.controllers;
 
 import java.security.Principal;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +43,31 @@ public class CalendarController {
 		model.addAttribute("user", user);
 		
 		model.addAttribute("events_list",
-						   this.calendarEventService.getAllEventsOfAccount(user));
+					this.calendarEventService.getAllEventsOfAccount(user.getId(), true));
+		
+		model.addAttribute("events_list_nonuser",
+				   this.calendarEventService.getAllEventsOfAccount(user.getId(), false));
+		
+		model.addAttribute("events_list_upcoming",
+				   this.calendarEventService.getAllEventsAfterDate(
+						   user.getId(),
+						   true,
+						   LocalDateTime.now()
+		));
+		
+		YearMonth yearMonth = YearMonth.now();
+		model.addAttribute("events_list_between",
+				   this.calendarEventService.getAllEventsBetweenDates(
+						   user.getId(),
+						   true,
+						   yearMonth.atDay(1).atStartOfDay(),
+						   yearMonth.plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+		));
 		
 		model.addAttribute("entry_list",
-				           this.diaryEntryService.getAllEventsOfAccount(user));
+				   this.diaryEntryService.getAllEventsOfAccount(
+						   user
+		));
 		
 		return "home";
 	}

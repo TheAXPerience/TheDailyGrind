@@ -1,5 +1,7 @@
 package com.alvinxu.TheDailyGrind.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,11 @@ public class AccountService {
 	
 	public Account getAccountByEmail(String email) {
 		return accountRepository.findByEmail(email);
+	}
+	
+	// TODO
+	public List<Account> getAccountsLikeUsername(String username) {
+		return null;
 	}
 	
 	public boolean registerNewAccount(RegisterDto registerForm) {
