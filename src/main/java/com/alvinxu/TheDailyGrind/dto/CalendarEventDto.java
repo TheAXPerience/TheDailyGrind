@@ -16,6 +16,8 @@ public class CalendarEventDto {
 	private String description;
 	
 	private boolean is_public;
+	
+	private boolean is_complete = false;
 
 	public java.util.Date getDate_of_event() {
 		return date_of_event;
@@ -47,6 +49,14 @@ public class CalendarEventDto {
 
 	public void setIs_public(boolean is_public) {
 		this.is_public = is_public;
+	}
+
+	public boolean isIs_complete() {
+		return is_complete;
+	}
+
+	public void setIs_complete(boolean is_complete) {
+		this.is_complete = is_complete;
 	}
 
 	@Override
