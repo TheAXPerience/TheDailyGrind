@@ -1,5 +1,6 @@
 package com.alvinxu.TheDailyGrind.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,17 +36,17 @@ public class DiaryEntry {
 	@CreationTimestamp
 	@Column(updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dateCreated; // date created
+	private LocalDateTime dateCreated; // date created
 	// date created also acts as the date of entry (in UTC)
 	
 	@UpdateTimestamp
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dateUpdated; // date last edited
+	private LocalDateTime dateUpdated; // date last edited
 	
 	@Column
-	@Temporal(TemporalType.DATE)
-	private Date dateOfEntry;
+	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime dateOfEntry;
 	
 	@Column(columnDefinition="VARCHAR(255) not null")
 	private String title;
@@ -69,22 +70,6 @@ public class DiaryEntry {
 		this.diaryOwner = diaryOwner;
 	}
 
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	public Date getDateUpdated() {
-		return dateUpdated;
-	}
-
-	public void setDateUpdated(Date dateUpdated) {
-		this.dateUpdated = dateUpdated;
-	}
-
 	public String getTitle() {
 		return title;
 	}
@@ -101,13 +86,28 @@ public class DiaryEntry {
 		this.entry = entry;
 	}
 
-	public Date getDateOfEntry() {
-		return dateOfEntry;
-	}
+  public LocalDateTime getDateCreated() {
+    return dateCreated;
+  }
 
-	public void setDateOfEntry(Date dateOfEntry) {
-		this.dateOfEntry = dateOfEntry;
-	}
-	
+  public void setDateCreated(LocalDateTime dateCreated) {
+    this.dateCreated = dateCreated;
+  }
+
+  public LocalDateTime getDateUpdated() {
+    return dateUpdated;
+  }
+
+  public void setDateUpdated(LocalDateTime dateUpdated) {
+    this.dateUpdated = dateUpdated;
+  }
+
+  public LocalDateTime getDateOfEntry() {
+    return dateOfEntry;
+  }
+
+  public void setDateOfEntry(LocalDateTime dateOfEntry) {
+    this.dateOfEntry = dateOfEntry;
+  }
 	
 }

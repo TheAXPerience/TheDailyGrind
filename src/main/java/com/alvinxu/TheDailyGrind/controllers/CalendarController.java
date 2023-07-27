@@ -20,6 +20,7 @@ import com.alvinxu.TheDailyGrind.dto.CalendarEventDto;
 import com.alvinxu.TheDailyGrind.dto.DiaryEntryDto;
 import com.alvinxu.TheDailyGrind.models.Account;
 import com.alvinxu.TheDailyGrind.models.CalendarEvent;
+import com.alvinxu.TheDailyGrind.models.DiaryEntry;
 import com.alvinxu.TheDailyGrind.services.AccountService;
 import com.alvinxu.TheDailyGrind.services.CalendarEventService;
 import com.alvinxu.TheDailyGrind.services.DiaryEntryService;
@@ -65,12 +66,14 @@ public class CalendarController {
 						   true,
 						   yearMonth.atDay(1).atStartOfDay(),
 						   yearMonth.plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
-		));
+				   )
+		);
 		
 		model.addAttribute("entry_list",
 				   this.diaryEntryService.getAllEventsOfAccount(
-						   user
-		));
+						   user.getId()
+				   )
+		);
 		
 		return "home";
 	}
@@ -116,10 +119,9 @@ public class CalendarController {
 			@PathVariable("ceid") long ceid,
 			Principal principal
 	) {
-		CalendarEvent cevent;
 		CalendarEventDto dto = new CalendarEventDto();
 		try {
-			cevent = this.calendarEventService.getById(ceid);
+		  CalendarEvent cevent = this.calendarEventService.getById(ceid);
 			dto.setDate_of_event(cevent.getDateOfEvent());
 			dto.setDescription(cevent.getDescription());
 			dto.setEvent_name(cevent.getTitle());
@@ -189,6 +191,8 @@ public class CalendarController {
 	@GetMapping("/new-diary-entry")
 	public String diaryEntryForm(Model model) {
 		model.addAttribute("diaryEntryDto", new DiaryEntryDto());
+		model.addAttribute("formHeading", "New Diary Entry");
+    model.addAttribute("submitLink", "/new-diary-entry/");
 		return "diary-entry-form";
 	}
 	
@@ -199,17 +203,96 @@ public class CalendarController {
 				Principal principal) {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("diaryEntryDto", diaryEntryDto);
+			model.addAttribute("formHeading", "New Diary Entry");
+      model.addAttribute("submitLink", "/new-diary-entry/");
 			return "diary-entry-form";
 		}
 		
 		// System.out.println(calendarEventDto);
 		
-		if (!diaryEntryService.saveNewDiaryEntry(diaryEntryDto, principal.getName())) {
-			bindingResult.reject("An error occurred registering your entry.");
+		try {
+		  diaryEntryService.saveNewDiaryEntry(diaryEntryDto, principal.getName());
+		} catch (Exception e) {
+			bindingResult.reject(e.getMessage());
 			model.addAttribute("diaryEntryDto", diaryEntryDto);
+			model.addAttribute("formHeading", "New Diary Entry");
+			model.addAttribute("submitLink", "/new-diary-entry/");
 			return "diary-entry-form";
 		}
 		
 		return "redirect:/home";
+	}
+	
+	@GetMapping("/edit-diary-entry/{deid}")
+	public String editDiaryEntry(Model model,
+	    @PathVariable("deid") Long deid,
+	    Principal principal
+	  ) {
+	  DiaryEntryDto dto = new DiaryEntryDto();
+	  try {
+	    DiaryEntry dentry = this.diaryEntryService.getById(deid);
+	    dto.setDate_of_entry(dentry.getDateOfEntry().toLocalDate());
+	    dto.setTitle(dentry.getTitle());
+	    dto.setEntry(dentry.getEntry());
+	    
+	    if (!dentry.getDiaryOwner().getEmail().equals(principal.getName())) {
+        // i have no idea what to do here
+        return "redirect:/home";
+      }
+	  } catch (Exception e) {
+	    // ???
+	    return "redirect:/home";
+	  }
+	  model.addAttribute("diaryEntryDto", dto);
+	  model.addAttribute("method", "PUT");
+	  model.addAttribute("formHeading", "Edit Diary Entry #" + deid);
+	  model.addAttribute("submitLink", "/edit-diary-entry/" + deid + "/");
+	  return "diary-entry-form";
+	}
+	
+	@PutMapping("/edit-diary-entry/{deid}/")
+	public String editDiaryEntrySubmit(Model model,
+	    @PathVariable("deid") Long deid,
+	    DiaryEntryDto diaryEntryDto,
+	    BindingResult bindingResult,
+	    Principal principal
+	  ) {
+	  if (bindingResult.hasErrors()) {
+	    model.addAttribute("diaryEntryDto", diaryEntryDto);
+	    model.addAttribute("method", "PUT");
+	    model.addAttribute("formHeading", "Edit Diary Entry #" + deid);
+	    model.addAttribute("submitLink", "/edit-diary-entry/" + deid + "/");
+      return "calendar-event-form";
+    }
+    
+    try {
+      System.out.println(diaryEntryDto.getDate_of_entry());
+      diaryEntryService.updateDiaryEntry(
+          deid, principal.getName(), diaryEntryDto);
+    } catch (Exception e) {
+      bindingResult.reject(e.getMessage());
+      model.addAttribute("diaryEntryDto", diaryEntryDto);
+      model.addAttribute("method", "PUT");
+      model.addAttribute("formHeading", "Edit Diary Entry #" + deid);
+      model.addAttribute("submitLink", "/edit-diary-entry/" + deid + "/");
+      return "calendar-event-form";
+    }
+    
+    return "redirect:/home";
+	}
+	
+	@DeleteMapping("/delete-diary-entry/{deid}/")
+	public String deleteDiaryEntry(
+	    @PathVariable("deid") Long deid,
+	    Principal principal
+	  ) {
+	  try {
+      this.diaryEntryService.deleteDiaryEntry(deid, principal.getName());
+    } catch (Exception e) {
+      // i have no idea how to handle this
+      return "redirect:/home";
+    }
+    
+    return "redirect:/home";
 	}
 }

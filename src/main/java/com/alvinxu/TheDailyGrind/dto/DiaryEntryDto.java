@@ -1,6 +1,11 @@
 package com.alvinxu.TheDailyGrind.dto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,8 +17,8 @@ public class DiaryEntryDto {
 	private String title;
 	
 	@NotNull(message="Date must not be null.")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private java.util.Date date_of_entry;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) 
+	private LocalDate date_of_entry;
 	
 	@NotBlank(message = "Diary Entry cannot be blank.")
 	private String entry;
@@ -34,11 +39,11 @@ public class DiaryEntryDto {
 		this.entry = entry;
 	}
 
-	public java.util.Date getDate_of_entry() {
+	public LocalDate getDate_of_entry() {
 		return date_of_entry;
 	}
 
-	public void setDate_of_entry(java.util.Date date_of_entry) {
+	public void setDate_of_entry(LocalDate date_of_entry) {
 		this.date_of_entry = date_of_entry;
 	}
 	

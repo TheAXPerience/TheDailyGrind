@@ -1,6 +1,8 @@
 package com.alvinxu.TheDailyGrind.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,23 +23,71 @@ public class DiaryEntryService {
 	AccountService accountService;
 	
 	@Transactional
-	public boolean saveNewDiaryEntry(DiaryEntryDto dto, String userEmail) {
+	public DiaryEntry getById(Long deid) {
+	  Optional<DiaryEntry> dentry = diaryEntryRepository.findById(deid);
+	  if (dentry.isEmpty()) {
+	    throw new IllegalArgumentException("Error: diary entry does not exist");
+	  }
+	  return dentry.get();
+	}
+	
+	@Transactional
+	public void saveNewDiaryEntry(DiaryEntryDto dto, String userEmail) {
 		Account user = accountService.getAccountByEmail(userEmail);
 		if (user == null) {
-			return false;
+			throw new IllegalArgumentException("Error: could not verify user");
 		}
 		
 		DiaryEntry dentry = new DiaryEntry();
 		dentry.setDiaryOwner(user);
 		dentry.setTitle(dto.getTitle());
 		dentry.setEntry(dto.getEntry());
-		dentry.setDateOfEntry(dto.getDate_of_entry());
+		dentry.setDateOfEntry(dto.getDate_of_entry().atStartOfDay());
 		this.diaryEntryRepository.save(dentry);
-		
-		return true;
 	}
 	
-	public List<DiaryEntry> getAllEventsOfAccount(Account user) {
-		return this.diaryEntryRepository.findAllByAccountId(user.getId());
+	@Transactional
+	public List<DiaryEntry> getAllEventsOfAccount(Long userId) {
+		return this.diaryEntryRepository.findAllByAccountId(userId);
 	}
+	
+	// TODO
+	@Transactional
+	public List<DiaryEntry> getAllEntriesBeforeDate(Long userId, LocalDateTime date) {
+	  return null;
+	}
+	
+  @Transactional
+  public void updateDiaryEntry(Long deid, String userEmail, DiaryEntryDto dto) throws IllegalArgumentException {
+    Optional<DiaryEntry> diantry = this.diaryEntryRepository.findById(deid);
+    if (diantry.isEmpty()) {
+      throw new IllegalArgumentException("Error: could not find diary entry");
+    }
+    
+    DiaryEntry dentry = diantry.get();
+    if (!dentry.getDiaryOwner().getEmail().equals(userEmail)) {
+      throw new IllegalArgumentException("Error: user does not have permission to alter diary entry");
+    }
+    
+    dentry.setDateOfEntry(dto.getDate_of_entry().atStartOfDay());
+    dentry.setTitle(dto.getTitle());
+    dentry.setEntry(dto.getEntry());
+    this.diaryEntryRepository.save(dentry);
+  }
+	
+	@Transactional
+	public void deleteDiaryEntry(Long deid, String userEmail) throws IllegalArgumentException {
+	  Optional<DiaryEntry> diantry = this.diaryEntryRepository.findById(deid);
+	  if (diantry.isEmpty()) {
+	    throw new IllegalArgumentException("Error: could not find diary entry");
+	  }
+	  
+	  DiaryEntry dentry = diantry.get();
+	  if (!dentry.getDiaryOwner().getEmail().equals(userEmail)) {
+	    throw new IllegalArgumentException("Error: user does not have permission to delete diary entry");
+	  }
+	  
+	  this.diaryEntryRepository.delete(dentry);
+	}
+	
 }

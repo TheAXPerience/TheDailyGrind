@@ -144,8 +144,16 @@
 	<div align="center">
 		<h2>My Diary</h2>
 		<div th:each="entry: ${entry_list}" align="center">
+			<button th:attr="onclick=|window.location='/edit-diary-entry/${entry.getId()}'|">
+				Edit
+			</button>
+			<form th:action="@{/delete-diary-entry/{id}/(id=${entry.getId()})}" method="POST">
+            	<input type="hidden" name="_method" value="DELETE" />
+            	<input type="hidden" name="_token" value="{{ csrf_token() }}">
+            	<input type="submit" value="Delete">
+            </form>
 			Date: <span
-				th:text="${#dates.format(entry.getDateOfEntry(), 'MM/dd/yyyy')}"></span>
+				th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy')}"></span>
 			<h3 th:text="${entry.getTitle()}"></h3>
 			<p th:text="${entry.getEntry()}"></p>
 		</div>

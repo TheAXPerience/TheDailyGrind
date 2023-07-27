@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="utf-8"/>
-    <title>Plan My Day - Create New Diary Entry</title>
+    <title>The Daily Grind</title>
   </head>
   <body>
   	<div align="right">
@@ -10,8 +10,8 @@
   	  <span> | </span>
   	  <a href="/logout">Logout</a>
   	</div>
-    <h1 align="center">New Diary Entry</h1>
-    <form th:action="@{/new-diary-entry/}" th:object="${diaryEntryDto}" th:method="POST">
+    <h1 align="center" th:text="${formHeading}">New Diary Entry</h1>
+    <form th:action="@{${submitLink}}" th:object="${diaryEntryDto}" th:method="${method} == null ? POST : PUT">
       <div align="center" th:if="${#fields.hasErrors('*')}">
         <p th:each="err: ${#fields.errors('*')}" th:text="${err}"></p>
       </div>
