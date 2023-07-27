@@ -1,182 +1,122 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="utf-8" />
-<title>The Daily Grind</title>
-</head>
-<body>
-	<div align="right">
-		<h3>
-			Hello, <span th:text="${user.getUsername()}"></span>
-		</h3>
-		<br /> <a href="/logout">Logout</a><br /> <a
-			href="/new-calendar-event">Create New Event</a><br /> <a
-			href="/new-diary-entry">Create New Diary Entry</a>
-	</div>
-	<h1>The Daily Grind</h1>
-	<table align="center">
-		<tr>
-			<td>
-				<div align="center">
-					<h2>My Events</h2>
-					<div th:each="event: ${events_list}" align="center">
-						<h3 th:text="${event.getTitle()}"></h3>
-						<button
-							th:attr="onclick=|window.location='/edit-calendar-event/${event.getId()}'|">
-							Edit
-						</button>
-						<form th:action="@{/delete-calendar-event/{id}/(id=${event.getId()})}" method="POST">
-              				<input type="hidden" name="_method" value="DELETE" />
-              				<input type="hidden" name="_token" value="{{ csrf_token() }}">
-              				<input type="submit" value="Delete">
-            			</form>
-						<table>
-							<tr>
-								<td>Organizer</td>
-								<td th:text="${event.getEventOrganizer().getUsername()}"></td>
-							</tr>
-							<tr>
-								<td>Description</td>
-								<td th:text="${event.getDescription()}"></td>
-							</tr>
-							<tr>
-								<td>Date and Time</td>
-								<td
-									th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td
-									th:text="${event.isPublic() ? 'Public Event' : 'Private Event'}"></td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</td>
-			<td>
-				<div align="center">
-					<h2>My Public Events</h2>
-					<div th:each="event: ${events_list_nonuser}" align="center">
-						<h3 th:text="${event.getTitle()}"></h3>
-						<table>
-							<tr>
-								<td>Organizer</td>
-								<td th:text="${event.getEventOrganizer().getUsername()}"></td>
-							</tr>
-							<tr>
-								<td>Description</td>
-								<td th:text="${event.getDescription()}"></td>
-							</tr>
-							<tr>
-								<td>Date and Time</td>
-								<td
-									th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td
-									th:text="${event.isPublic() ? 'Public Event' : 'Private Event'}"></td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<div align="center">
-					<h2>Upcoming Events</h2>
-					<div th:each="event: ${events_list_upcoming}" align="center">
-						<h3 th:text="${event.getTitle()}"></h3>
-						<table>
-							<tr>
-								<td>Organizer</td>
-								<td th:text="${event.getEventOrganizer().getUsername()}"></td>
-							</tr>
-							<tr>
-								<td>Description</td>
-								<td th:text="${event.getDescription()}"></td>
-							</tr>
-							<tr>
-								<td>Date and Time</td>
-								<td
-									th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td
-									th:text="${event.isPublic() ? 'Public Event' : 'Private Event'}"></td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</td>
-			<td>
-				<div align="center">
-					<h2>This Month's Events</h2>
-					<div th:each="event: ${events_list_between}" align="center">
-						<h3 th:text="${event.getTitle()}"></h3>
-						<table>
-							<tr>
-								<td>Organizer</td>
-								<td th:text="${event.getEventOrganizer().getUsername()}"></td>
-							</tr>
-							<tr>
-								<td>Description</td>
-								<td th:text="${event.getDescription()}"></td>
-							</tr>
-							<tr>
-								<td>Date and Time</td>
-								<td
-									th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td
-									th:text="${event.isPublic() ? 'Public Event' : 'Private Event'}"></td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</td>
-		</tr>
-	</table>
-	<div align="center">
-		<h2>My Diary</h2>
-		<div th:each="entry: ${entry_list}" align="center">
-			<button th:attr="onclick=|window.location='/edit-diary-entry/${entry.getId()}'|">
-				Edit
-			</button>
-			<form th:action="@{/delete-diary-entry/{id}/(id=${entry.getId()})}" method="POST">
-            	<input type="hidden" name="_method" value="DELETE" />
-            	<input type="hidden" name="_token" value="{{ csrf_token() }}">
-            	<input type="submit" value="Delete">
-            </form>
-			Date: <span
-				th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy')}"></span>
-			<h3 th:text="${entry.getTitle()}"></h3>
-			<p th:text="${entry.getEntry()}"></p>
-		</div>
-	</div>
-	
-	<div align="center">
-		<h2>My Recent Diary</h2>
-		<div th:each="entry: ${entry_list_recent}" align="center">
-			Date: <span
-				th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy')}"></span>
-			<h3 th:text="${entry.getTitle()}"></h3>
-			<p th:text="${entry.getEntry()}"></p>
-		</div>
-	</div>
-	
-	<div align="center">
-		<h2>My Diary for the Month</h2>
-		<div th:each="entry: ${entry_list_between}" align="center">
-			Date: <span
-				th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy')}"></span>
-			<h3 th:text="${entry.getTitle()}"></h3>
-			<p th:text="${entry.getEntry()}"></p>
-		</div>
-	</div>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>The Daily Grind</title>
+  </head>
+  <body>
+    <div align="right">
+      <h3>Hello, <span th:text="${user.getUsername()}"></span></h3>
+      <a href="/logout">Logout</a><br />
+      <a href="/new-calendar-event">Create New Event</a><br />
+      <a href="/new-diary-entry">Create New Diary Entry</a>
+    </div>
+    <h1>The Daily Grind</h1>
+    <table align="center">
+      <tr>
+        <td>
+          <div align="center">
+            <h2>My Upcoming Events</h2>
+            <div th:each="event: ${events_list_upcoming}" align="center">
+              <h3 th:text="${event.getTitle()}"></h3>
+              <button th:attr="onclick=|window.location='/edit-calendar-event/${event.getId()}'|">
+                Edit
+              </button>
+              <form th:action="@{/delete-calendar-event/{id}/(id=${event.getId()})}" method="POST">
+                <input type="hidden" name="_method" value="DELETE" />
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="submit" value="Delete">
+              </form>
+              <table>
+                <tr>
+                  <td>Organizer</td>
+                  <td th:text="${event.getEventOrganizer().getUsername()}"></td>
+                </tr>
+                <tr>
+                  <td>Description</td>
+                  <td th:text="${event.getDescription()}"></td>
+                </tr>
+                <tr>
+                  <td>Date and Time</td>
+                  <td th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td th:text="${event.isPublic() ? 'Public Event' : 'Private Event'}"></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td th:text="${event.isComplete() ? 'Event Finished' : 'Event Upcoming'}"></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </td>
+        
+        <td>
+          <div align="center">
+            <h2>This Month's Events</h2>
+            <div th:each="event: ${events_list_between}" align="center">
+              <h3 th:text="${event.getTitle()}"></h3>
+              <table>
+                <tr>
+                  <td>Organizer</td>
+                  <td th:text="${event.getEventOrganizer().getUsername()}"></td>
+                </tr>
+                <tr>
+                  <td>Description</td>
+                  <td th:text="${event.getDescription()}"></td>
+                </tr>
+                <tr>
+                  <td>Date and Time</td>
+                  <td th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td th:text="${event.isPublic() ? 'Public Event' : 'Private Event'}"></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td th:text="${event.isComplete() ? 'Event Finished' : 'Event Upcoming'}"></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </td>
+      </tr>
+      
+      <tr>
+        <td>
+          <div align="center">
+            <h2>My Recent Diary</h2>
+            <div th:each="entry: ${entry_list_recent}" align="center">
+              <h3 th:text="${entry.getTitle()}"></h3>
+              Date: <span th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy')}"></span><br/>
+              <p th:text="${entry.getEntry()}"></p>
+              <button th:attr="onclick=|window.location='/edit-diary-entry/${entry.getId()}'|">
+                Edit
+              </button>
+              <form th:action="@{/delete-diary-entry/{id}/(id=${entry.getId()})}" method="POST">
+                <input type="hidden" name="_method" value="DELETE" />
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="submit" value="Delete">
+              </form>
+            </div>
+          </div>
+        </td>
+        
+        <td>
+          <div align="center">
+            <h2>This Month's Diary Entries</h2>
+            <div th:each="entry: ${entry_list_between}" align="center">
+              <h3 th:text="${entry.getTitle()}"></h3>
+              Date: <span th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy')}"></span><br/>
+              <p th:text="${entry.getEntry()}"></p>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+    
+  </body>
 </html>
