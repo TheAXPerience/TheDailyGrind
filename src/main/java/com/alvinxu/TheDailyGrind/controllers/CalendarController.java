@@ -75,6 +75,21 @@ public class CalendarController {
 				   )
 		);
 		
+		model.addAttribute("entry_list_recent",
+        this.diaryEntryService.getAllEntriesBeforeDate(
+            user.getId(),
+            LocalDateTime.now()
+        )
+    );
+		
+		model.addAttribute("entry_list_between",
+        this.diaryEntryService.getAllEntriesBetweenDates(
+            user.getId(),
+            yearMonth.atDay(1).atStartOfDay(),
+            yearMonth.plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+        )
+		);
+		
 		return "home";
 	}
 	

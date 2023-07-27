@@ -51,12 +51,6 @@ public class DiaryEntryService {
 		return this.diaryEntryRepository.findAllByAccountId(userId);
 	}
 	
-	// TODO
-	@Transactional
-	public List<DiaryEntry> getAllEntriesBeforeDate(Long userId, LocalDateTime date) {
-	  return null;
-	}
-	
   @Transactional
   public void updateDiaryEntry(Long deid, String userEmail, DiaryEntryDto dto) throws IllegalArgumentException {
     Optional<DiaryEntry> diantry = this.diaryEntryRepository.findById(deid);
@@ -90,4 +84,15 @@ public class DiaryEntryService {
 	  this.diaryEntryRepository.delete(dentry);
 	}
 	
+  // TODO
+  @Transactional
+  public List<DiaryEntry> getAllEntriesBeforeDate(Long userId, LocalDateTime date) {
+    return this.diaryEntryRepository.findAllOfAccountBeforeDate(userId, date);
+  }
+  
+  // TODO
+  @Transactional
+  public List<DiaryEntry> getAllEntriesBetweenDates(Long userId, LocalDateTime begin, LocalDateTime end) {
+    return this.diaryEntryRepository.findAllOfAccountBetweenDates(userId, begin, end);
+  }
 }

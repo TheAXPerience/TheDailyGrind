@@ -158,5 +158,25 @@
 			<p th:text="${entry.getEntry()}"></p>
 		</div>
 	</div>
+	
+	<div align="center">
+		<h2>My Recent Diary</h2>
+		<div th:each="entry: ${entry_list_recent}" align="center">
+			Date: <span
+				th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy')}"></span>
+			<h3 th:text="${entry.getTitle()}"></h3>
+			<p th:text="${entry.getEntry()}"></p>
+		</div>
+	</div>
+	
+	<div align="center">
+		<h2>My Diary for the Month</h2>
+		<div th:each="entry: ${entry_list_between}" align="center">
+			Date: <span
+				th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy')}"></span>
+			<h3 th:text="${entry.getTitle()}"></h3>
+			<p th:text="${entry.getEntry()}"></p>
+		</div>
+	</div>
 </body>
 </html>
