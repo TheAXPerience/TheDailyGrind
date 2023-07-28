@@ -1,5 +1,6 @@
 package com.alvinxu.TheDailyGrind.services;
 
+import java.nio.CharBuffer;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +45,9 @@ public class AccountService {
 		Account user = new Account();
 		user.setEmail(registerForm.getEmail());
 		user.setUsername(registerForm.getUsername());
-		user.setPassword(passwordEncoder.encode(registerForm.getPassword()));
+		user.setPassword(
+		    passwordEncoder.encode(CharBuffer.wrap(registerForm.getPassword()))
+		);
 		user.setAuthority("USER");
 		user.setDateOfBirth(registerForm.getDate_of_birth());
 		accountRepository.save(user);

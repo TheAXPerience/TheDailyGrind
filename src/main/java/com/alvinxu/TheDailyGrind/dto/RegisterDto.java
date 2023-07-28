@@ -20,7 +20,7 @@ public class RegisterDto {
 	private String username;
 	
 	@Size(min=8, max=255, message="Password must be at least 8 characters long.")
-	private String password;
+	private char[] password;
 	
 	@Past(message="Date of Birth cannot be in the future.")
 	@NotNull(message="Date of Birth must be entered.")
@@ -46,11 +46,11 @@ public class RegisterDto {
 		this.username = username;
 	}
 
-	public String getPassword() {
+	public char[] getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(char[] password) {
 		this.password = password;
 	}
 
