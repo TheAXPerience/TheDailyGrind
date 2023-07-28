@@ -1,10 +1,11 @@
 package com.alvinxu.TheDailyGrind.controllers;
 
 import java.security.Principal;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import com.alvinxu.TheDailyGrind.dto.CalendarEventDto;
 import com.alvinxu.TheDailyGrind.dto.DiaryEntryDto;
+import com.alvinxu.TheDailyGrind.dto.MonthYearDto;
+import com.alvinxu.TheDailyGrind.dto.SearchQueryDto;
 import com.alvinxu.TheDailyGrind.models.Account;
 import com.alvinxu.TheDailyGrind.models.CalendarEvent;
 import com.alvinxu.TheDailyGrind.models.DiaryEntry;
@@ -46,34 +49,44 @@ public class CalendarController {
 		Account user = accountService.getAccountByEmail(principal.getName());
 		model.addAttribute("user", user);
 		
+		SearchQueryDto searchQueryDto = new SearchQueryDto();
+		model.addAttribute("searchQueryDto", searchQueryDto);
+		
+		MonthYearDto monthYearDto = new MonthYearDto();
+		model.addAttribute("monthYearDto", monthYearDto);
+		
+		/*
 		model.addAttribute("events_list",
 					this.calendarEventService.getAllEventsOfAccount(user.getId(), true));
 		
 		model.addAttribute("events_list_nonuser",
 				   this.calendarEventService.getAllEventsOfAccount(user.getId(), false));
+		*/
 		
 		model.addAttribute("events_list_upcoming",
-				   this.calendarEventService.getAllEventsAfterDate(
-						   user.getId(),
-						   true,
-						   LocalDateTime.now()
-		));
+		    this.calendarEventService.getAllEventsAfterDate(
+		        user.getId(),
+		        true,
+		        LocalDateTime.now()
+		    )
+		);
 		
 		YearMonth yearMonth = YearMonth.now();
 		model.addAttribute("events_list_between",
-				   this.calendarEventService.getAllEventsBetweenDates(
-						   user.getId(),
-						   true,
-						   yearMonth.atDay(1).atStartOfDay(),
-						   yearMonth.plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
-				   )
+		    this.calendarEventService.getAllEventsBetweenDates(
+		        user.getId(),
+		        true,
+		        yearMonth.atDay(1).atStartOfDay(),
+		        yearMonth.plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+        )
 		);
 		
+		/*
 		model.addAttribute("entry_list",
 				   this.diaryEntryService.getAllEventsOfAccount(
 						   user.getId()
 				   )
-		);
+		); */
 		
 		model.addAttribute("entry_list_recent",
         this.diaryEntryService.getAllEntriesBeforeDate(
@@ -309,5 +322,133 @@ public class CalendarController {
     }
     
     return "redirect:/home";
+	}
+
+	@GetMapping("/search")
+	public String searchForUser(Model model,
+	    @Valid SearchQueryDto searchQueryDto,
+	    BindingResult bindingResult
+	) {
+	  model.addAttribute("searchQueryDto", searchQueryDto);
+	  if (bindingResult.hasErrors()) {
+	    model.addAttribute("searchResults", new ArrayList<Account>());
+	  } else {
+	    List<Account> searchResults = this.accountService.getAccountsLikeUsername(searchQueryDto.getQuery());
+	    model.addAttribute("searchResults", searchResults);
+	  }
+	  
+	  return "search-username";
+	}
+	
+	@GetMapping("/month-year")
+	public String searchForMonthYear(Model model,
+	    @Valid MonthYearDto monthYearDto,
+	    BindingResult bindingResult,
+	    Principal principal
+	) {
+	  Account user = this.accountService.getAccountByEmail(principal.getName());
+	  model.addAttribute("user", user);
+	  model.addAttribute("showEditDelete", true);
+	  
+	  if (bindingResult.hasErrors()) {
+	    model.addAttribute("heading", "Error Parsing Month and Year");
+	    model.addAttribute("eventsList", new ArrayList<CalendarEvent>());
+	    return "month-year-calendar";
+	  }
+	  
+	  List<CalendarEvent> eventsList = this.calendarEventService.getAllEventsBetweenDates(
+	      user.getId(),
+	      false,
+	      monthYearDto.getMonthYear().atDay(1).atStartOfDay(),
+	      monthYearDto.getMonthYear().plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+	  );
+	  
+	  List<DiaryEntry> entriesList = this.diaryEntryService.getAllEntriesBetweenDates(
+	      user.getId(),
+	      monthYearDto.getMonthYear().atDay(1).atStartOfDay(),
+	      monthYearDto.getMonthYear().plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+	  );
+	  
+	  model.addAttribute("eventsList", eventsList);
+	  model.addAttribute("entriesList", entriesList);
+	  model.addAttribute("heading",
+	      monthYearDto
+	      .getMonthYear()
+	      .format(DateTimeFormatter.ofPattern("MMMM yyyy"))
+	  );
+	  
+	  return "month-year-calendar";
+	}
+	
+	@GetMapping("/user/{userId}")
+	public String userPage(Model model,
+	    @PathVariable("userId") Long userId
+	) {
+	  Account user;
+	  try {
+	    user = this.accountService.getAccountById(userId);
+	  } catch (Exception e) {
+	    // ???
+	    return "redirect:/home";
+	  }
+	  
+	  model.addAttribute("user", user);
+	  model.addAttribute("searchQueryDto", new SearchQueryDto());
+	  model.addAttribute("monthYearDto", new MonthYearDto());
+	  
+	  model.addAttribute("eventsList_upcoming",
+	      this.calendarEventService.getAllEventsAfterDate(
+	          userId, false, LocalDateTime.now()
+	      )
+	  );
+	  
+	  model.addAttribute("eventsList_thisMonth",
+	      this.calendarEventService.getAllEventsBetweenDates(
+	          userId,
+	          false,
+	          YearMonth.now().atDay(1).atStartOfDay(),
+	          YearMonth.now().plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+	      )
+	  );
+	  
+	  return "user-home";
+	}
+	
+	@GetMapping("/user/{userId}/month-year")
+	public String userPageByMonth(Model model,
+	    @PathVariable("userId") Long userId,
+	    @Valid MonthYearDto monthYearDto,
+	    BindingResult bindingResult
+	) {
+	  try {
+	    Account user = this.accountService.getAccountById(userId);
+	    model.addAttribute("user", user);
+	    model.addAttribute("heading",
+	        user.getUsername() + ": " + monthYearDto
+	        .getMonthYear()
+	        .format(DateTimeFormatter.ofPattern("MMMM yyyy"))
+	    );
+	  } catch (Exception e) {
+	    // ???
+	    return "redirect:/home";
+	  }
+	  model.addAttribute("showEditDelete", false);
+    
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("heading", "Error Parsing Month and Year");
+      model.addAttribute("eventsList", new ArrayList<CalendarEvent>());
+      return "month-year-calendar";
+    }
+    
+    List<CalendarEvent> eventsList = this.calendarEventService.getAllEventsBetweenDates(
+        userId,
+        false,
+        monthYearDto.getMonthYear().atDay(1).atStartOfDay(),
+        monthYearDto.getMonthYear().plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+    );
+    
+    model.addAttribute("eventsList", eventsList);
+    
+    return "month-year-calendar";
 	}
 }

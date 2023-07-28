@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8"/>
+    <title>The Daily Grind</title>
+  </head>
+  <body>
+  	<div align="right">
+  	  <a href="/home">Return Home</a>
+  	  <span> | </span>
+  	  <a href="/logout">Logout</a>
+  	</div>
+    <h1 align="center">Search by Username</h1>
+    <form th:action="@{/search}" th:object="${searchQueryDto}" th:method="GET">
+      <div align="center" th:if="${#fields.hasErrors('*')}">
+        <p th:each="err: ${#fields.errors('*')}" th:text="${err}"></p>
+      </div>
+      <label>Search : </label>
+        <input type="text" placeholder="Search for user..." th:field="*{query}" />
+        <button type="submit" class="button">Search</button>
+    </form>
+    <div th:if="${not #lists.isEmpty(searchResults)}">
+      <table align="center">
+        <thead>
+          <tr>
+            <td>ID</td>
+            <td>USERNAME</td>
+            <td>EMAIL</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="user: ${searchResults}">
+            <td th:text="${user.getId()}"></td>
+            <td><a th:href="@{/user/{userId}(userId=${user.getId()})}" th:text="${user.getUsername()}"></a></td>
+            <td th:text="${user.getEmail()}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

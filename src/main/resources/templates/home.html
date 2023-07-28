@@ -12,6 +12,18 @@
       <a href="/new-diary-entry">Create New Diary Entry</a>
     </div>
     <h1>The Daily Grind</h1>
+    <div align="center">
+      <form th:action="@{/search}" th:object="${searchQueryDto}" th:method="GET">
+        <label>Search : </label>
+        <input type="text" placeholder="Search for user..." th:field="*{query}" />
+        <button type="submit" class="button">Search</button>
+      </form>
+      <form th:action="@{/month-year}" th:object="${monthYearDto}" th:method="GET">
+        <label>Month and Year : </label>
+        <input type="month" th:field="*{monthYear}" />
+        <button type="submit" class="button">Search</button>
+      </form>
+    </div>
     <table align="center">
       <tr>
         <td>
@@ -19,14 +31,6 @@
             <h2>My Upcoming Events</h2>
             <div th:each="event: ${events_list_upcoming}" align="center">
               <h3 th:text="${event.getTitle()}"></h3>
-              <button th:attr="onclick=|window.location='/edit-calendar-event/${event.getId()}'|">
-                Edit
-              </button>
-              <form th:action="@{/delete-calendar-event/{id}/(id=${event.getId()})}" method="POST">
-                <input type="hidden" name="_method" value="DELETE" />
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <input type="submit" value="Delete">
-              </form>
               <table>
                 <tr>
                   <td>Organizer</td>
@@ -49,6 +53,14 @@
                   <td th:text="${event.isComplete() ? 'Event Finished' : 'Event Upcoming'}"></td>
                 </tr>
               </table>
+                            <button th:attr="onclick=|window.location='/edit-calendar-event/${event.getId()}'|">
+                Edit
+              </button>
+              <form th:action="@{/delete-calendar-event/{id}/(id=${event.getId()})}" method="POST">
+                <input type="hidden" name="_method" value="DELETE" />
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="submit" value="Delete">
+              </form>
             </div>
           </div>
         </td>

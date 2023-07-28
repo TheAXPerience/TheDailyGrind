@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8"/>
+    <title>The Daily Grind</title>
+  </head>
+  <body>
+  	<div align="right">
+  	  <a href="/home">Return Home</a>
+  	  <span> | </span>
+  	  <a href="/logout">Logout</a>
+  	</div>
+    <h1 align="center" th:text="${user.getUsername()}"></h1>
+    <form th:action="@{/search}" th:object="${searchQueryDto}" th:method="GET">
+      <label>Search : </label>
+      <input type="text" placeholder="Search for user..." th:field="*{query}" />
+      <button type="submit" class="button">Search</button>
+    </form>
+    <form th:action="@{/user/{userId}/month-year(userId=${user.getId()})}" th:object="${monthYearDto}" th:method="GET">
+      <label>Month and Year : </label>
+      <input type="month" th:field="*{monthYear}" />
+      <button type="submit" class="button">Search</button>
+    </form>
+    
+    <table>
+      <tr>
+        <td>
+          <div th:if="${not #lists.isEmpty(eventsList_upcoming)}">
+            <h2>Upcoming Events</h2>
+            <ul>
+              <li th:each="event: ${eventsList_upcoming}">
+                <h3 th:text="${event.getTitle()}"></h3>
+                <table>
+                  <tr>
+                    <td>Organizer</td>
+                    <td th:text="${event.getEventOrganizer().getUsername()}"></td>
+                  </tr>
+                  <tr>
+                    <td>Description</td>
+                    <td th:text="${event.getDescription()}"></td>
+                  </tr>
+                  <tr>
+                    <td>Date and Time</td>
+                    <td th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td th:text="${event.isPublic() ? 'Public Event' : 'Private Event'}"></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td th:text="${event.isComplete() ? 'Event Finished' : 'Event Upcoming'}"></td>
+                  </tr>
+                </table>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      
+      <tr>
+        <td>
+          <div th:if="${not #lists.isEmpty(eventsList_thisMonth)}">
+            <h2>This Month's Events</h2>
+            <ul>
+              <li th:each="event: ${eventsList_thisMonth}">
+                <h3 th:text="${event.getTitle()}"></h3>
+                <table>
+                  <tr>
+                    <td>Organizer</td>
+                    <td th:text="${event.getEventOrganizer().getUsername()}"></td>
+                  </tr>
+                  <tr>
+                    <td>Description</td>
+                    <td th:text="${event.getDescription()}"></td>
+                  </tr>
+                  <tr>
+                    <td>Date and Time</td>
+                    <td th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td th:text="${event.isPublic() ? 'Public Event' : 'Private Event'}"></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td th:text="${event.isComplete() ? 'Event Finished' : 'Event Upcoming'}"></td>
+                  </tr>
+                </table>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
