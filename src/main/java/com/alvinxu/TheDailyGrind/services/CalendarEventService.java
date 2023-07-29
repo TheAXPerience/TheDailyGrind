@@ -39,11 +39,11 @@ public class CalendarEventService {
 		
 		CalendarEvent cevent = new CalendarEvent();
 		cevent.setEventOrganizer(user);
-		cevent.setDateOfEvent(dto.getDate_of_event());
-		cevent.setTitle(dto.getEvent_name());
+		cevent.setDateOfEvent(dto.getDateOfEvent());
+		cevent.setTitle(dto.getTitle());
 		cevent.setDescription(dto.getDescription());
-		cevent.setPublic(dto.isIs_public());
-		cevent.setComplete(dto.isIs_complete());
+		cevent.setPublic(dto.getPublicToggle());
+		cevent.setComplete(dto.getCompleteToggle());
 		this.calendarEventRepository.save(cevent);
 	}
 	
@@ -62,11 +62,11 @@ public class CalendarEventService {
 		}
 		
 		// update event using information from DTO
-		cevent.setDateOfEvent(edited.getDate_of_event());
-		cevent.setTitle(edited.getEvent_name());
+		cevent.setDateOfEvent(edited.getDateOfEvent());
+		cevent.setTitle(edited.getTitle());
 		cevent.setDescription(edited.getDescription());
-		cevent.setPublic(edited.isIs_public());
-		cevent.setComplete(edited.isIs_complete());
+		cevent.setPublic(edited.getPublicToggle());
+		cevent.setComplete(edited.getCompleteToggle());
 		this.calendarEventRepository.save(cevent);
 	}
 	

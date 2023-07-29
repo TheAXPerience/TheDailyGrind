@@ -42,7 +42,7 @@
                 </tr>
                 <tr>
                   <td>Date and Time</td>
-                  <td th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
+                  <td th:text="${#temporals.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a', 'Etc/UTC')}"></td>
                 </tr>
                 <tr>
                   <td></td>
@@ -81,7 +81,7 @@
                 </tr>
                 <tr>
                   <td>Date and Time</td>
-                  <td th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
+                  <td th:text="${#temporals.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a', 'Etc/UTC')}"></td>
                 </tr>
                 <tr>
                   <td></td>
@@ -103,7 +103,7 @@
             <h2>My Recent Diary</h2>
             <div th:each="entry: ${entry_list_recent}" align="center">
               <h3 th:text="${entry.getTitle()}"></h3>
-              Date: <span th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy')}"></span><br/>
+              Date: <span th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy', 'Etc/UTC')}"></span><br/>
               <p th:text="${entry.getEntry()}"></p>
               <button th:attr="onclick=|window.location='/edit-diary-entry/${entry.getId()}'|">
                 Edit
@@ -122,7 +122,7 @@
             <h2>This Month's Diary Entries</h2>
             <div th:each="entry: ${entry_list_between}" align="center">
               <h3 th:text="${entry.getTitle()}"></h3>
-              Date: <span th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy')}"></span><br/>
+              Date: <span th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy', 'Etc/UTC')}"></span><br/>
               <p th:text="${entry.getEntry()}"></p>
             </div>
           </div>

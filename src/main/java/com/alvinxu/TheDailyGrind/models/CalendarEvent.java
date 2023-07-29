@@ -1,5 +1,6 @@
 package com.alvinxu.TheDailyGrind.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,17 +38,17 @@ public class CalendarEvent {
 	@CreationTimestamp
 	@Column(updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dateCreated; // date created
+	private LocalDateTime dateCreated; // date created
 	// date created also acts as the date of entry (in UTC)
 	
 	@UpdateTimestamp
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dateUpdated; // date last edited
+	private LocalDateTime dateUpdated; // date last edited
 	
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dateOfEvent; // stored in UTC; front-end must do conversion
+	private LocalDateTime dateOfEvent; // stored in UTC; front-end must do conversion
 	
 	@Column(columnDefinition="VARCHAR(255)")
 	private String title;
@@ -77,31 +78,31 @@ public class CalendarEvent {
 		this.eventOrganizer = eventOrganizer;
 	}
 
-	public Date getDateCreated() {
-		return dateCreated;
-	}
+	public LocalDateTime getDateCreated() {
+    return dateCreated;
+  }
 
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
+  public void setDateCreated(LocalDateTime dateCreated) {
+    this.dateCreated = dateCreated;
+  }
 
-	public Date getDateUpdated() {
-		return dateUpdated;
-	}
+  public LocalDateTime getDateUpdated() {
+    return dateUpdated;
+  }
 
-	public void setDateUpdated(Date dateUpdated) {
-		this.dateUpdated = dateUpdated;
-	}
+  public void setDateUpdated(LocalDateTime dateUpdated) {
+    this.dateUpdated = dateUpdated;
+  }
 
-	public Date getDateOfEvent() {
-		return dateOfEvent;
-	}
+  public LocalDateTime getDateOfEvent() {
+    return dateOfEvent;
+  }
 
-	public void setDateOfEvent(Date dateOfEvent) {
-		this.dateOfEvent = dateOfEvent;
-	}
+  public void setDateOfEvent(LocalDateTime dateOfEvent) {
+    this.dateOfEvent = dateOfEvent;
+  }
 
-	public String getTitle() {
+  public String getTitle() {
 		return title;
 	}
 

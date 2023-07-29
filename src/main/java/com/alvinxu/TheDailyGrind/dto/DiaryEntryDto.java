@@ -18,7 +18,7 @@ public class DiaryEntryDto {
 	
 	@NotNull(message="Date must not be null.")
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) 
-	private LocalDate date_of_entry;
+	private LocalDate date_of_entry = LocalDate.now();
 	
 	@NotBlank(message = "Diary Entry cannot be blank.")
 	private String entry;

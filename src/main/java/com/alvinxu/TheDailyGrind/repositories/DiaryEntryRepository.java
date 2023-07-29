@@ -1,5 +1,6 @@
 package com.alvinxu.TheDailyGrind.repositories;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public interface DiaryEntryRepository extends JpaRepository<DiaryEntry, Long> {
 	@Query(value = "SELECT * FROM diary_entry de"
       + " WHERE de.account_id = :account_id"
         + " AND de.date_of_entry >= :start_date"
-        + " AND de.date_of_entry <= :end_date"
+        + " AND de.date_of_entry < :end_date"
       + " ORDER BY de.date_of_entry ASC",
        nativeQuery=true)
   List<DiaryEntry> findAllOfAccountBetweenDates(

@@ -1,5 +1,7 @@
 package com.alvinxu.TheDailyGrind.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,8 +26,8 @@ public class Account {
 	private String password;
 	
 	@Column
-	@Temporal(TemporalType.DATE)
-	private java.util.Date dateOfBirth;
+	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime dateOfBirth;
 	
 	/*
 	 * USER or ADMIN
@@ -73,11 +75,12 @@ public class Account {
 		this.authority = authority;
 	}
 
-	public java.util.Date getDateOfBirth() {
-		return dateOfBirth;
-	}
+  public LocalDateTime getDateOfBirth() {
+    return dateOfBirth;
+  }
 
-	public void setDateOfBirth(java.util.Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
+  public void setDateOfBirth(LocalDateTime dateOfBirth) {
+    this.dateOfBirth = dateOfBirth;
+  }
+	
 }

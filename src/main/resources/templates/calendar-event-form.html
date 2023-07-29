@@ -18,11 +18,11 @@
       <table align="center">
         <tr>
           <td><label>Date and Time</label></td>
-          <td><input type="datetime-local" placeholder="Date of Event" th:field="*{date_of_event}" /></td>
+          <td><input type="datetime-local" placeholder="Date of Event" th:field="*{dateOfEvent}" /></td>
         </tr>
         <tr>
           <td><label>Event Name</label></td>
-          <td><input type="text" placeholder="Event Name" th:field="*{event_name}" /></td>
+          <td><input type="text" placeholder="Event Name" th:field="*{title}" /></td>
         </tr>
         <tr>
           <td><label>Event Description</label></td>
@@ -30,11 +30,11 @@
         </tr>
         <tr>
           <td>Make event public?</td>
-          <td><input type="checkbox" th:field="*{is_public}"/></td>
+          <td><input type="checkbox" th:field="*{publicToggle}"/></td>
         </tr>
         <tr>
           <td>Has the event already finished?</td>
-          <td><input type="checkbox" th:field="*{is_complete}"/></td>
+          <td><input type="checkbox" th:field="*{completeToggle}"/></td>
         </tr>
       </table>
       <div align="center">

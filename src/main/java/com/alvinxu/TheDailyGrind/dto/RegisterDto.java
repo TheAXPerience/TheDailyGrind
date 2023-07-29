@@ -1,5 +1,7 @@
 package com.alvinxu.TheDailyGrind.dto;
 
+import java.time.LocalDate;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.alvinxu.TheDailyGrind.validators.DateFormatConstraint;
@@ -25,7 +27,7 @@ public class RegisterDto {
 	@Past(message="Date of Birth cannot be in the future.")
 	@NotNull(message="Date of Birth must be entered.")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private java.util.Date date_of_birth;
+	private LocalDate dateOfBirth = LocalDate.now();
 	
 	@AssertTrue(message="Must agree to the Terms of Service.")
 	private boolean tos_agree;
@@ -54,15 +56,15 @@ public class RegisterDto {
 		this.password = password;
 	}
 
-	public java.util.Date getDate_of_birth() {
-		return date_of_birth;
-	}
+	public LocalDate getDateOfBirth() {
+    return dateOfBirth;
+  }
 
-	public void setDate_of_birth(java.util.Date date_of_birth) {
-		this.date_of_birth = date_of_birth;
-	}
+  public void setDateOfBirth(LocalDate dateOfBirth) {
+    this.dateOfBirth = dateOfBirth;
+  }
 
-	public boolean isTos_agree() {
+  public boolean isTos_agree() {
 		return tos_agree;
 	}
 

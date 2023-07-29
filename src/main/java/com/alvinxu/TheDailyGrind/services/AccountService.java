@@ -49,7 +49,7 @@ public class AccountService {
 		    passwordEncoder.encode(CharBuffer.wrap(registerForm.getPassword()))
 		);
 		user.setAuthority("USER");
-		user.setDateOfBirth(registerForm.getDate_of_birth());
+		user.setDateOfBirth(registerForm.getDateOfBirth().atStartOfDay());
 		accountRepository.save(user);
 		
 		return true;

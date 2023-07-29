@@ -1,6 +1,7 @@
 package com.alvinxu.TheDailyGrind.controllers;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -99,7 +100,7 @@ public class CalendarController {
         this.diaryEntryService.getAllEntriesBetweenDates(
             user.getId(),
             yearMonth.atDay(1).atStartOfDay(),
-            yearMonth.plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+            yearMonth.plusMonths(1).atDay(1).atStartOfDay()
         )
 		);
 		
@@ -150,11 +151,11 @@ public class CalendarController {
 		CalendarEventDto dto = new CalendarEventDto();
 		try {
 		  CalendarEvent cevent = this.calendarEventService.getById(ceid);
-			dto.setDate_of_event(cevent.getDateOfEvent());
+			dto.setDateOfEvent(cevent.getDateOfEvent());
 			dto.setDescription(cevent.getDescription());
-			dto.setEvent_name(cevent.getTitle());
-			dto.setIs_complete(cevent.isComplete());
-			dto.setIs_public(cevent.isPublic());
+			dto.setTitle(cevent.getTitle());
+			dto.setCompleteToggle(cevent.isComplete());
+			dto.setPublicToggle(cevent.isPublic());
 			
 			if (!cevent.getEventOrganizer().getEmail().equals(principal.getName())) {
 			  // i have no idea what to do here
@@ -366,7 +367,7 @@ public class CalendarController {
 	  List<DiaryEntry> entriesList = this.diaryEntryService.getAllEntriesBetweenDates(
 	      user.getId(),
 	      monthYearDto.getMonthYear().atDay(1).atStartOfDay(),
-	      monthYearDto.getMonthYear().plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+	      monthYearDto.getMonthYear().plusMonths(1).atDay(1).atStartOfDay()
 	  );
 	  
 	  model.addAttribute("eventsList", eventsList);

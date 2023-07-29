@@ -38,7 +38,7 @@
             </tr>
             <tr>
               <td>Date and Time</td>
-              <td th:text="${#dates.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
+              <td th:text="${#temporals.format(event.getDateOfEvent(), 'MM-dd-yyyy hh:mm a')}"></td>
             </tr>
             <tr>
               <td></td>

@@ -1,5 +1,7 @@
 package com.alvinxu.TheDailyGrind.dto;
 
+import java.time.LocalDateTime;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.validation.constraints.NotNull;
@@ -8,32 +10,32 @@ import jakarta.validation.constraints.Size;
 public class CalendarEventDto {
 	@NotNull(message="Date must not be null.")
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-	private java.util.Date date_of_event;
+	private LocalDateTime dateOfEvent = LocalDateTime.now();
 	
 	@Size(min=1, max=200, message="Event Name must be between 1-200 characters.")
-	private String event_name;
+	private String title;
 	
 	private String description;
 	
-	private boolean is_public;
+	private boolean publicToggle = false;
 	
-	private boolean is_complete = false;
+	private boolean completeToggle = false;
+	
+	public LocalDateTime getDateOfEvent() {
+    return dateOfEvent;
+  }
 
-	public java.util.Date getDate_of_event() {
-		return date_of_event;
-	}
+  public void setDateOfEvent(LocalDateTime dateOfEvent) {
+    this.dateOfEvent = dateOfEvent;
+  }
 
-	public void setDate_of_event(java.util.Date date_of_event) {
-		this.date_of_event = date_of_event;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public String getEvent_name() {
-		return event_name;
-	}
-
-	public void setEvent_name(String event_name) {
-		this.event_name = event_name;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
 	public String getDescription() {
 		return description;
@@ -43,25 +45,20 @@ public class CalendarEventDto {
 		this.description = description;
 	}
 
-	public boolean isIs_public() {
-		return is_public;
-	}
+  public boolean getPublicToggle() {
+    return publicToggle;
+  }
 
-	public void setIs_public(boolean is_public) {
-		this.is_public = is_public;
-	}
+  public void setPublicToggle(boolean publicToggle) {
+    this.publicToggle = publicToggle;
+  }
 
-	public boolean isIs_complete() {
-		return is_complete;
-	}
+  public boolean getCompleteToggle() {
+    return completeToggle;
+  }
 
-	public void setIs_complete(boolean is_complete) {
-		this.is_complete = is_complete;
-	}
-
-	@Override
-	public String toString() {
-		return "CalendarEventDto [date_of_event=" + date_of_event + ", event_name=" + event_name + ", description="
-				+ description + ", is_public=" + is_public + "]";
-	}
+  public void setCompleteToggle(boolean completeToggle) {
+    this.completeToggle = completeToggle;
+  }
+	
 }
