@@ -9,11 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -451,5 +454,13 @@ public class CalendarController {
     model.addAttribute("eventsList", eventsList);
     
     return "month-year-calendar";
+	}
+	
+	@InitBinder
+	public void initBinder(WebDataBinder webDataBinder) {
+	  // add trimming support for input fields
+	  webDataBinder.registerCustomEditor(String.class, new StringTrimmerEditor(false));
+	  
+	  // TODO: add validator for password field
 	}
 }
