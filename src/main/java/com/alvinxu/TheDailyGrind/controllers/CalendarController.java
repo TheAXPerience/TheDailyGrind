@@ -1,7 +1,6 @@
 package com.alvinxu.TheDailyGrind.controllers;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +30,7 @@ import com.alvinxu.TheDailyGrind.models.DiaryEntry;
 import com.alvinxu.TheDailyGrind.services.AccountService;
 import com.alvinxu.TheDailyGrind.services.CalendarEventService;
 import com.alvinxu.TheDailyGrind.services.DiaryEntryService;
+import com.alvinxu.TheDailyGrind.validators.PasswordValidator;
 
 import jakarta.validation.Valid;
 
@@ -462,5 +462,6 @@ public class CalendarController {
 	  webDataBinder.registerCustomEditor(String.class, new StringTrimmerEditor(false));
 	  
 	  // TODO: add validator for password field
+	  webDataBinder.addValidators(new PasswordValidator());
 	}
 }

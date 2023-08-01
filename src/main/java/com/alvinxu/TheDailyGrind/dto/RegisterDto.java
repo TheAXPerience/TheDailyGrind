@@ -4,8 +4,6 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.alvinxu.TheDailyGrind.validators.DateFormatConstraint;
-
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
