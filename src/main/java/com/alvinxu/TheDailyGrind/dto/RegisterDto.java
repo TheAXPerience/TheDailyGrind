@@ -14,22 +14,22 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 public class RegisterDto {
-	@NotEmpty(message="Must submit email to create account.")
-	@Email
+	@NotEmpty(message="{email.not.empty}")
+	@Email(message="{email.not.valid}")
 	private String email;
 	
-	@Size(min=3, max=255, message="Username must be at least 3 characters long.")
+	@Size(min=3, max=255, message="{username.size}")
 	private String username;
 	
-	@Size(min=8, max=255, message="Password must be at least 8 characters long.")
+	@Size(min=8, max=255, message="{password.size}")
 	private char[] password;
 	
-	@Past(message="Date of Birth cannot be in the future.")
-	@NotNull(message="Date of Birth must be entered.")
+	@Past(message="{date.of.birth.future}")
+	@NotNull(message="{date.of.birth.not.null}")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dateOfBirth = LocalDate.now();
 	
-	@AssertTrue(message="Must agree to the Terms of Service.")
+	@AssertTrue(message="{terms.of.service}")
 	private boolean tos_agree;
 
 	public String getEmail() {
