@@ -25,6 +25,9 @@ public class AccountController {
 	@Autowired
 	private AccountService accountService;
 	
+	@Autowired
+	private PasswordValidator passwordValidator;
+	
 	@GetMapping("/")
 	public String index(Principal principal) {
 		if (principal == null) {
@@ -76,7 +79,7 @@ public class AccountController {
 	@InitBinder("registerDto")
   public void registerDtoInitBinder(WebDataBinder webDataBinder) {
     // add validator for password field
-    webDataBinder.addValidators(new PasswordValidator());
+    webDataBinder.addValidators(passwordValidator);
   }
 	
 }
