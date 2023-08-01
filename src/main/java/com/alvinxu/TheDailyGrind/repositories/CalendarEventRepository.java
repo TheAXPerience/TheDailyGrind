@@ -1,8 +1,9 @@
 package com.alvinxu.TheDailyGrind.repositories;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,9 +17,10 @@ public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Lo
 			+ " AND (ce.is_public OR :is_user)"
 			+ " ORDER BY ce.date_of_event",
 		   nativeQuery=true)
-	List<CalendarEvent> findAllByAccountId(
+	Page<CalendarEvent> findAllByAccountId(
 			@Param("account_id") Long accountId,
-			@Param("is_user") boolean isUser
+			@Param("is_user") boolean isUser,
+			Pageable pageable
 	);
 	
 	@Query(value = "SELECT * FROM calendar_event ce"
@@ -27,10 +29,11 @@ public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Lo
 				+ " AND ce.date_of_event >= :minimum_date"
 			+ " ORDER BY ce.date_of_event",
 		   nativeQuery=true)
-	List<CalendarEvent> findAllOfAccountAfterDate(
+	Page<CalendarEvent> findAllOfAccountAfterDate(
 			@Param("account_id") Long accountId,
 			@Param("is_user") boolean isUser,
-			@Param("minimum_date") LocalDateTime originDate
+			@Param("minimum_date") LocalDateTime originDate,
+			Pageable pageable
 	);
 	
 	@Query(value = "SELECT * FROM calendar_event ce"
@@ -40,10 +43,11 @@ public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Lo
 				+ " AND ce.date_of_event <= :end_date"
 			+ " ORDER BY ce.date_of_event",
 		   nativeQuery=true)
-	List<CalendarEvent> findAllOfAccountBetweenDates(
+	Page<CalendarEvent> findAllOfAccountBetweenDates(
 			@Param("account_id") Long accountId,
 			@Param("is_user") boolean isUser,
 			@Param("start_date") LocalDateTime startDate,
-			@Param("end_date") LocalDateTime endDate
+			@Param("end_date") LocalDateTime endDate,
+			Pageable pageable
 	);
 }

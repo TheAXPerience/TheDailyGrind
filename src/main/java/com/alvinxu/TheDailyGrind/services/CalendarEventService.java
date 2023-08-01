@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.alvinxu.TheDailyGrind.dto.CalendarEventDto;
@@ -87,30 +90,39 @@ public class CalendarEventService {
     this.calendarEventRepository.delete(cevent);
 	}
 	
-	public List<CalendarEvent> getAllEventsOfAccount(
+	public Page<CalendarEvent> getAllEventsOfAccount(
 			long userId,
-			boolean sameUser
+			boolean sameUser,
+			int page,
+			int size
 	) {
+	  Pageable pageable = PageRequest.of(page, size);
 		return this.calendarEventRepository.findAllByAccountId(
-				userId, sameUser);
+				userId, sameUser, pageable);
 	}
 	
-	public List<CalendarEvent> getAllEventsAfterDate(
+	public Page<CalendarEvent> getAllEventsAfterDate(
 			long userId,
 			boolean isUser,
-			LocalDateTime originDate
+			LocalDateTime originDate,
+			int page,
+			int size
 	) {
+	  Pageable pageable = PageRequest.of(page, size);
 		return this.calendarEventRepository.findAllOfAccountAfterDate(
-				userId, isUser, originDate);
+				userId, isUser, originDate, pageable);
 	}
 	
-	public List<CalendarEvent> getAllEventsBetweenDates(
+	public Page<CalendarEvent> getAllEventsBetweenDates(
 			long userId,
 			boolean isUser,
 			LocalDateTime startDate,
-			LocalDateTime endDate
+			LocalDateTime endDate,
+			int page,
+			int size
 	) {
+	  Pageable pageable = PageRequest.of(page, size);
 		return this.calendarEventRepository.findAllOfAccountBetweenDates(
-				userId, isUser, startDate, endDate);
+				userId, isUser, startDate, endDate, pageable);
 	}
 }

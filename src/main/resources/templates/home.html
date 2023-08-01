@@ -16,11 +16,17 @@
       <form th:action="@{/search}" th:object="${searchQueryDto}" th:method="GET">
         <label>Search : </label>
         <input type="text" placeholder="Search for user..." th:field="*{query}" />
+        <input type="hidden" th:field="*{page}" value="0">
+        <input type="hidden" th:field="*{size}" value="10">
         <button type="submit" class="button">Search</button>
       </form>
       <form th:action="@{/month-year}" th:object="${monthYearDto}" th:method="GET">
         <label>Month and Year : </label>
         <input type="month" th:field="*{monthYear}" />
+        <input type="hidden" th:field="*{eventPage}" value="0">
+        <input type="hidden" th:field="*{eventSize}" value="10">
+        <input type="hidden" th:field="*{diaryPage}" value="0">
+        <input type="hidden" th:field="*{diarySize}" value="10">
         <button type="submit" class="button">Search</button>
       </form>
     </div>
@@ -53,7 +59,7 @@
                   <td th:text="${event.isComplete() ? 'Event Finished' : 'Event Upcoming'}"></td>
                 </tr>
               </table>
-                            <button th:attr="onclick=|window.location='/edit-calendar-event/${event.getId()}'|">
+              <button th:attr="onclick=|window.location='/edit-calendar-event/${event.getId()}'|">
                 Edit
               </button>
               <form th:action="@{/delete-calendar-event/{id}/(id=${event.getId()})}" method="POST">
@@ -92,6 +98,14 @@
                   <td th:text="${event.isComplete() ? 'Event Finished' : 'Event Upcoming'}"></td>
                 </tr>
               </table>
+              <button th:attr="onclick=|window.location='/edit-calendar-event/${event.getId()}'|">
+                Edit
+              </button>
+              <form th:action="@{/delete-calendar-event/{id}/(id=${event.getId()})}" method="POST">
+                <input type="hidden" name="_method" value="DELETE" />
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="submit" value="Delete">
+              </form>
             </div>
           </div>
         </td>
@@ -124,11 +138,18 @@
               <h3 th:text="${entry.getTitle()}"></h3>
               Date: <span th:text="${#temporals.format(entry.getDateOfEntry(), 'MM/dd/yyyy', 'Etc/UTC')}"></span><br/>
               <p th:text="${entry.getEntry()}"></p>
+              <button th:attr="onclick=|window.location='/edit-diary-entry/${entry.getId()}'|">
+                Edit
+              </button>
+              <form th:action="@{/delete-diary-entry/{id}/(id=${entry.getId()})}" method="POST">
+                <input type="hidden" name="_method" value="DELETE" />
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="submit" value="Delete">
+              </form>
             </div>
           </div>
         </td>
       </tr>
     </table>
-    
   </body>
 </html>

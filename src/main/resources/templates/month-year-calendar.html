@@ -19,6 +19,10 @@
       </div>
       <label>Month and Year : </label>
       <input type="month" th:field="*{monthYear}" />
+      <input type="hidden" th:field="*{eventPage}" value="0">
+      <input type="hidden" th:field="*{eventSize}" value="10">
+      <input type="hidden" th:field="*{diaryPage}" value="0">
+      <input type="hidden" th:field="*{diarySize}" value="10">
       <button type="submit" class="button">Search</button>
     </form>
     
@@ -61,6 +65,11 @@
           </div>
         </li>
       </ul>
+      <div align="center">
+        <button th:if="${prevEventPage != null}" th:attr="onclick=|window.location='${prevEventPage}'|">Previous</button>
+        <label th:text="${eventsPageNumber}"></label>
+        <button th:if="${nextEventPage != null}" th:attr="onclick=|window.location='${nextEventPage}'|">Next</button>
+      </div>
     </div>
     
     <div th:if="${not #lists.isEmpty(entriesList)}">
@@ -82,6 +91,11 @@
           </div>
         </li>
       </ul>
+      <div align="center">
+        <button th:if="${prevDiaryPage != null}" th:attr="onclick=|window.location='${prevDiaryPage}'|">Previous</button>
+        <label th:text="${diaryPageNumber}"></label>
+        <button th:if="${nextDiaryPage != null}" th:attr="onclick=|window.location='${nextDiaryPage}'|">Next</button>
+      </div>
     </div>
   </body>
 </html>

@@ -1,11 +1,12 @@
 package com.alvinxu.TheDailyGrind.services;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.alvinxu.TheDailyGrind.dto.DiaryEntryDto;
@@ -48,8 +49,13 @@ public class DiaryEntryService {
 	}
 	
 	@Transactional
-	public List<DiaryEntry> getAllEventsOfAccount(Long userId) {
-		return this.diaryEntryRepository.findAllByAccountId(userId);
+	public Page<DiaryEntry> getAllEventsOfAccount(
+	    Long userId,
+	    int page,
+	    int size
+	) {
+	  Pageable pageable = PageRequest.of(page, size);
+		return this.diaryEntryRepository.findAllByAccountId(userId, pageable);
 	}
 	
   @Transactional
@@ -85,15 +91,28 @@ public class DiaryEntryService {
 	  this.diaryEntryRepository.delete(dentry);
 	}
 	
-  // TODO
   @Transactional
-  public List<DiaryEntry> getAllEntriesBeforeDate(Long userId, LocalDateTime date) {
-    return this.diaryEntryRepository.findAllOfAccountBeforeDate(userId, date);
+  public Page<DiaryEntry> getAllEntriesBeforeDate(
+      Long userId,
+      LocalDateTime date,
+      int page,
+      int size
+  ) {
+    Pageable pageable = PageRequest.of(page, size);
+    return this.diaryEntryRepository.findAllOfAccountBeforeDate(
+        userId, date, pageable);
   }
   
-  // TODO
   @Transactional
-  public List<DiaryEntry> getAllEntriesBetweenDates(Long userId, LocalDateTime begin, LocalDateTime end) {
-    return this.diaryEntryRepository.findAllOfAccountBetweenDates(userId, begin, end);
+  public Page<DiaryEntry> getAllEntriesBetweenDates(
+      Long userId,
+      LocalDateTime begin,
+      LocalDateTime end,
+      int page,
+      int size
+  ) {
+    Pageable pageable = PageRequest.of(page, size);
+    return this.diaryEntryRepository.findAllOfAccountBetweenDates(
+        userId, begin, end, pageable);
   }
 }

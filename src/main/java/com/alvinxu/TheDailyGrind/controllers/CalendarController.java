@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alvinxu.TheDailyGrind.dto.CalendarEventDto;
 import com.alvinxu.TheDailyGrind.dto.DiaryEntryDto;
@@ -30,7 +32,7 @@ import com.alvinxu.TheDailyGrind.models.DiaryEntry;
 import com.alvinxu.TheDailyGrind.services.AccountService;
 import com.alvinxu.TheDailyGrind.services.CalendarEventService;
 import com.alvinxu.TheDailyGrind.services.DiaryEntryService;
-import com.alvinxu.TheDailyGrind.validators.PasswordValidator;
+import com.alvinxu.TheDailyGrind.validators.EmailPasswordValidator;
 
 import jakarta.validation.Valid;
 
@@ -71,7 +73,8 @@ public class CalendarController {
 		    this.calendarEventService.getAllEventsAfterDate(
 		        user.getId(),
 		        true,
-		        LocalDateTime.now()
+		        LocalDateTime.now(),
+		        0, 5
 		    )
 		);
 		
@@ -81,7 +84,8 @@ public class CalendarController {
 		        user.getId(),
 		        true,
 		        yearMonth.atDay(1).atStartOfDay(),
-		        yearMonth.plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+		        yearMonth.plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1),
+		        0, 5
         )
 		);
 		
@@ -95,7 +99,8 @@ public class CalendarController {
 		model.addAttribute("entry_list_recent",
         this.diaryEntryService.getAllEntriesBeforeDate(
             user.getId(),
-            LocalDateTime.now()
+            LocalDateTime.now(),
+            0, 5
         )
     );
 		
@@ -103,7 +108,8 @@ public class CalendarController {
         this.diaryEntryService.getAllEntriesBetweenDates(
             user.getId(),
             yearMonth.atDay(1).atStartOfDay(),
-            yearMonth.plusMonths(1).atDay(1).atStartOfDay()
+            yearMonth.plusMonths(1).atDay(1).atStartOfDay(),
+            0, 5
         )
 		);
 		
@@ -337,8 +343,28 @@ public class CalendarController {
 	  if (bindingResult.hasErrors()) {
 	    model.addAttribute("searchResults", new ArrayList<Account>());
 	  } else {
-	    List<Account> searchResults = this.accountService.getAccountsLikeUsername(searchQueryDto.getQuery());
+	    Page<Account> searchResults =
+	        this.accountService.getAccountsLikeUsername(
+	            searchQueryDto.getQuery(),
+	            searchQueryDto.getPage(),
+	            searchQueryDto.getSize()
+	        );
+	    
 	    model.addAttribute("searchResults", searchResults);
+	    model.addAttribute("pageNumber", searchQueryDto.getPage() + 1);
+	    
+	    if (searchQueryDto.getPage() > 0) {
+	      model.addAttribute("prevPage", "/search?query=" + searchQueryDto.getQuery()
+	        + "&page=" + (searchQueryDto.getPage() - 1)
+	        + "&size=" + searchQueryDto.getSize()
+	      );
+	    }
+	    if (searchQueryDto.getPage() + 1 < searchResults.getTotalPages()) {
+        model.addAttribute("nextPage", "/search?query=" + searchQueryDto.getQuery()
+          + "&page=" + (searchQueryDto.getPage() + 1)
+          + "&size=" + searchQueryDto.getSize()
+        );
+      }
 	  }
 	  
 	  return "search-username";
@@ -360,21 +386,67 @@ public class CalendarController {
 	    return "month-year-calendar";
 	  }
 	  
-	  List<CalendarEvent> eventsList = this.calendarEventService.getAllEventsBetweenDates(
+	  Page<CalendarEvent> eventsList = this.calendarEventService.getAllEventsBetweenDates(
 	      user.getId(),
-	      false,
+	      true,
 	      monthYearDto.getMonthYear().atDay(1).atStartOfDay(),
-	      monthYearDto.getMonthYear().plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+	      monthYearDto.getMonthYear().plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1),
+	      monthYearDto.getEventPage(),
+        monthYearDto.getEventSize()
 	  );
 	  
-	  List<DiaryEntry> entriesList = this.diaryEntryService.getAllEntriesBetweenDates(
+	  Page<DiaryEntry> entriesList = this.diaryEntryService.getAllEntriesBetweenDates(
 	      user.getId(),
 	      monthYearDto.getMonthYear().atDay(1).atStartOfDay(),
-	      monthYearDto.getMonthYear().plusMonths(1).atDay(1).atStartOfDay()
+	      monthYearDto.getMonthYear().plusMonths(1).atDay(1).atStartOfDay(),
+	      monthYearDto.getDiaryPage(),
+	      monthYearDto.getDiarySize()
 	  );
 	  
 	  model.addAttribute("eventsList", eventsList);
+	  model.addAttribute("eventsPageNumber", monthYearDto.getEventPage() + 1);
+    
+    if (monthYearDto.getEventPage() > 0) {
+      model.addAttribute("prevEventPage",
+          "/month-year?monthYear=" + monthYearDto.getMonthYear()
+        + "&eventPage=" + (monthYearDto.getEventPage() - 1)
+        + "&eventSize=" + monthYearDto.getEventSize()
+        + "&diaryPage=" + monthYearDto.getDiaryPage()
+        + "&diarySize=" + monthYearDto.getDiarySize()
+      );
+    }
+    if (monthYearDto.getEventPage() + 1 < eventsList.getTotalPages()) {
+      model.addAttribute("nextEventPage",
+          "month-year?monthYear=" + monthYearDto.getMonthYear()
+        + "&eventPage=" + (monthYearDto.getEventPage() + 1)
+        + "&eventSize=" + monthYearDto.getEventSize()
+        + "&diaryPage=" + monthYearDto.getDiaryPage()
+        + "&diarySize=" + monthYearDto.getDiarySize()
+      );
+    }
+	  
 	  model.addAttribute("entriesList", entriesList);
+	  model.addAttribute("diaryPageNumber", monthYearDto.getDiaryPage() + 1);
+	  
+	  if (monthYearDto.getDiaryPage() > 0) {
+      model.addAttribute("prevDiaryPage",
+          "/month-year?monthYear=" + monthYearDto.getMonthYear()
+        + "&eventPage=" + monthYearDto.getEventPage()
+        + "&eventSize=" + monthYearDto.getEventSize()
+        + "&diaryPage=" + (monthYearDto.getDiaryPage() - 1)
+        + "&diarySize=" + monthYearDto.getDiarySize()
+      );
+    }
+    if (monthYearDto.getDiaryPage() + 1 < entriesList.getTotalPages()) {
+      model.addAttribute("nextDiaryPage",
+          "/month-year?monthYear=" + monthYearDto.getMonthYear()
+        + "&eventPage=" + monthYearDto.getEventPage()
+        + "&eventSize=" + monthYearDto.getEventSize()
+        + "&diaryPage=" + (monthYearDto.getDiaryPage() + 1)
+        + "&diarySize=" + monthYearDto.getDiarySize()
+      );
+    }
+	  
 	  model.addAttribute("heading",
 	      monthYearDto
 	      .getMonthYear()
@@ -402,7 +474,8 @@ public class CalendarController {
 	  
 	  model.addAttribute("eventsList_upcoming",
 	      this.calendarEventService.getAllEventsAfterDate(
-	          userId, false, LocalDateTime.now()
+	          userId, false, LocalDateTime.now(),
+	          0, 5
 	      )
 	  );
 	  
@@ -411,7 +484,8 @@ public class CalendarController {
 	          userId,
 	          false,
 	          YearMonth.now().atDay(1).atStartOfDay(),
-	          YearMonth.now().plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+	          YearMonth.now().plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1),
+	          0, 5
 	      )
 	  );
 	  
@@ -444,14 +518,36 @@ public class CalendarController {
       return "month-year-calendar";
     }
     
-    List<CalendarEvent> eventsList = this.calendarEventService.getAllEventsBetweenDates(
+    Page<CalendarEvent> eventsList = this.calendarEventService.getAllEventsBetweenDates(
         userId,
         false,
         monthYearDto.getMonthYear().atDay(1).atStartOfDay(),
-        monthYearDto.getMonthYear().plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1)
+        monthYearDto.getMonthYear().plusMonths(1).atDay(1).atStartOfDay().minusMinutes(1),
+        monthYearDto.getEventPage(),
+        monthYearDto.getEventSize()
     );
     
     model.addAttribute("eventsList", eventsList);
+    model.addAttribute("eventsPageNumber", monthYearDto.getEventPage() + 1);
+    
+    if (monthYearDto.getEventPage() > 0) {
+      model.addAttribute("prevEventPage",
+          "/user/" + userId + "/month-year?monthYear=" + monthYearDto.getMonthYear()
+        + "&eventPage=" + (monthYearDto.getEventPage() - 1)
+        + "&eventSize=" + monthYearDto.getEventSize()
+        + "&diaryPage=" + monthYearDto.getDiaryPage()
+        + "&diarySize=" + monthYearDto.getDiarySize()
+      );
+    }
+    if (monthYearDto.getEventPage() + 1 < eventsList.getTotalPages()) {
+      model.addAttribute("nextEventPage",
+          "month-year?monthYear=" + monthYearDto.getMonthYear()
+        + "&eventPage=" + (monthYearDto.getEventPage() + 1)
+        + "&eventSize=" + monthYearDto.getEventSize()
+        + "&diaryPage=" + monthYearDto.getDiaryPage()
+        + "&diarySize=" + monthYearDto.getDiarySize()
+      );
+    }
     
     return "month-year-calendar";
 	}
@@ -460,8 +556,5 @@ public class CalendarController {
 	public void initBinder(WebDataBinder webDataBinder) {
 	  // add trimming support for input fields
 	  webDataBinder.registerCustomEditor(String.class, new StringTrimmerEditor(false));
-	  
-	  // TODO: add validator for password field
-	  webDataBinder.addValidators(new PasswordValidator());
 	}
 }

@@ -17,6 +17,8 @@
       </div>
       <label>Search : </label>
         <input type="text" placeholder="Search for user..." th:field="*{query}" />
+        <input type="hidden" th:field="*{page}" value="0">
+        <input type="hidden" th:field="*{size}" value="10">
         <button type="submit" class="button">Search</button>
     </form>
     <div th:if="${not #lists.isEmpty(searchResults)}">
@@ -36,6 +38,11 @@
           </tr>
         </tbody>
       </table>
+      <div align="center">
+        <button th:if="${prevPage != null}" th:attr="onclick=|window.location='${prevPage}'|">Previous</button>
+        <label th:text="${pageNumber}"></label>
+        <button th:if="${nextPage != null}" th:attr="onclick=|window.location='${nextPage}'|">Next</button>
+      </div>
     </div>
   </body>
 </html>

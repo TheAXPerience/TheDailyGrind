@@ -4,6 +4,9 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.alvinxu.TheDailyGrind.validators.EmailValidatorConstraint;
+import com.alvinxu.TheDailyGrind.validators.PasswordValidatorConstraint;
+
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -14,11 +17,13 @@ import jakarta.validation.constraints.Size;
 public class RegisterDto {
 	@NotEmpty(message="{email.not.empty}")
 	@Email(message="{email.not.valid}")
+	@EmailValidatorConstraint(message="{email.already.exists}")
 	private String email;
 	
 	@Size(min=3, max=255, message="{username.size}")
 	private String username;
 	
+	@PasswordValidatorConstraint(message="{password.not.valid}")
 	@Size(min=8, max=255, message="{password.size}")
 	private char[] password;
 	
