@@ -26,7 +26,7 @@ public class AccountService {
 	public Account getAccountById(Long id) {
 	  Optional<Account> account = this.accountRepository.findById(id);
 	  if (account.isEmpty()) {
-	    throw new IllegalArgumentException("Error: could not find user");
+	    throw new IllegalArgumentException("Error: user does not exist.");
 	  }
 	  return account.get();
 	}

@@ -42,7 +42,7 @@ public class AccountController {
 	
 	@PostMapping("/register/")
 	public String handle_register(Model model,
-	    @Valid @ModelAttribute("registerDto") RegisterDto registerDto,
+	    @Valid RegisterDto registerDto,
 	    BindingResult bindingResult
 	) {
 		if (bindingResult.hasErrors()) {

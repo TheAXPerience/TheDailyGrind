@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.validation.constraints.NotNull;
 
 public class MonthYearDto {
-  @NotNull
+  @NotNull(message="{month.year.not.null}")
   @DateTimeFormat(pattern = "yyyy-MM")
   private YearMonth monthYear = YearMonth.now();
   

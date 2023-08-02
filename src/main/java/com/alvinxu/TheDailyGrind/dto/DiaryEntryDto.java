@@ -12,15 +12,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class DiaryEntryDto {
-	@NotBlank(message="Diary Entry must be titled.")
-	@Size(min=1, max=255, message="Title must contain 1-255 characters.")
+	@Size(min=1, max=200, message="{title.length}")
 	private String title;
 	
-	@NotNull(message="Date must not be null.")
+	@NotNull(message="{date.not.null}")
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) 
 	private LocalDate date_of_entry = LocalDate.now();
 	
-	@NotBlank(message = "Diary Entry cannot be blank.")
+	@NotBlank(message = "{entry.empty}")
 	private String entry;
 
 	public String getTitle() {

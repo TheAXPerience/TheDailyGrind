@@ -3,7 +3,7 @@ package com.alvinxu.TheDailyGrind.dto;
 import jakarta.validation.constraints.NotEmpty;
 
 public class SearchQueryDto {
-  @NotEmpty
+  @NotEmpty(message="{query.empty}")
   private String query;
   private int page = 0;
   private int size = 10;

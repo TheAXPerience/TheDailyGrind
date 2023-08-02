@@ -8,11 +8,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class CalendarEventDto {
-	@NotNull(message="Date must not be null.")
+	@NotNull(message="{date.time.not.null}")
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime dateOfEvent = LocalDateTime.now();
 	
-	@Size(min=1, max=200, message="Event Name must be between 1-200 characters.")
+	@Size(min=1, max=200, message="{title.length}")
 	private String title;
 	
 	private String description;

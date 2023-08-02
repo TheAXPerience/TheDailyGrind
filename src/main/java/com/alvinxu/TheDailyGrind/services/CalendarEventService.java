@@ -28,7 +28,7 @@ public class CalendarEventService {
 	public CalendarEvent getById(long ceid) {
 		Optional<CalendarEvent> cevent = this.calendarEventRepository.findById(ceid);
 		if (cevent.isEmpty()) {
-			throw new IllegalArgumentException("Error: event does not exist");
+			throw new IllegalArgumentException("Error: event does not exist.");
 		}
 		return cevent.get();
 	}
@@ -37,7 +37,7 @@ public class CalendarEventService {
 	public void saveNewCalendarEvent(String userEmail, CalendarEventDto dto) {
 		Account user = accountService.getAccountByEmail(userEmail);
 		if (user == null) {
-			throw new IllegalArgumentException("Error: could not verify user");
+			throw new IllegalArgumentException("Error: could not verify user.");
 		}
 		
 		CalendarEvent cevent = new CalendarEvent();
@@ -55,13 +55,13 @@ public class CalendarEventService {
 		Optional<CalendarEvent> calvent = this.calendarEventRepository.findById(ceid);
 		if (calvent.isEmpty()) {
 			// placeholder exception: could not find event
-			throw new IllegalArgumentException("Error: could not find event");
+			throw new IllegalArgumentException("Error: event does not exist.");
 		}
 		
 		CalendarEvent cevent = calvent.get();
 		if (!cevent.getEventOrganizer().getEmail().equals(userEmail)) {
 			// placeholder exception: user trying to edit an event they do not own
-			throw new IllegalArgumentException("Error: does not have permission to edit event");
+			throw new IllegalArgumentException("Error: user does not have permission to edit event.");
 		}
 		
 		// update event using information from DTO
@@ -78,13 +78,13 @@ public class CalendarEventService {
 	  Optional<CalendarEvent> calvent = this.calendarEventRepository.findById(ceid);
     if (calvent.isEmpty()) {
       // placeholder exception: could not find event
-      throw new IllegalArgumentException("Error: could not find event");
+      throw new IllegalArgumentException("Error: event does not exist.");
     }
     
     CalendarEvent cevent = calvent.get();
     if (!cevent.getEventOrganizer().getEmail().equals(userEmail)) {
       // placeholder exception: user trying to edit an event they do not own
-      throw new IllegalArgumentException("Error: does not have permission to delete event");
+      throw new IllegalArgumentException("Error: user does not have permission to delete event.");
     }
     
     this.calendarEventRepository.delete(cevent);

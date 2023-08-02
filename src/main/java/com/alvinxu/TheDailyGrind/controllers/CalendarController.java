@@ -168,10 +168,10 @@ public class CalendarController {
 			
 			if (!cevent.getEventOrganizer().getEmail().equals(principal.getName())) {
 			  // i have no idea what to do here
-				return "redirect:/home";
+				return "redirect:/home?error=Error: user does not have permission to edit event.";
 			}
 		} catch (Exception e) {
-			return "redirect:/home";
+		  return "redirect:/home?error=" + e.getMessage();
 		}
 		
 		model.addAttribute("calendarEventDto", dto);
@@ -219,8 +219,8 @@ public class CalendarController {
 	  try {
 	    this.calendarEventService.deleteCalendarEvent(ceid, principal.getName());
 	  } catch (Exception e) {
-	    // i have no idea how to handle this
-	    return "redirect:/home";
+	    // TODO
+	    return "redirect:/home?error=" + e.getMessage();
 	  }
 	  
 	  return "redirect:/home";
@@ -274,12 +274,11 @@ public class CalendarController {
 	    dto.setEntry(dentry.getEntry());
 	    
 	    if (!dentry.getDiaryOwner().getEmail().equals(principal.getName())) {
-        // i have no idea what to do here
-        return "redirect:/home";
+        return "redirect:/home?error=Error: user does not have permission to edit diary entry.";
       }
 	  } catch (Exception e) {
-	    // ???
-	    return "redirect:/home";
+	    // TODO
+	    return "redirect:/home?error=" + e.getMessage();
 	  }
 	  model.addAttribute("diaryEntryDto", dto);
 	  model.addAttribute("method", "PUT");
@@ -327,8 +326,8 @@ public class CalendarController {
 	  try {
       this.diaryEntryService.deleteDiaryEntry(deid, principal.getName());
     } catch (Exception e) {
-      // i have no idea how to handle this
-      return "redirect:/home";
+      // TODO
+      return "redirect:/home?error=" + e.getMessage();
     }
     
     return "redirect:/home";
@@ -464,8 +463,8 @@ public class CalendarController {
 	  try {
 	    user = this.accountService.getAccountById(userId);
 	  } catch (Exception e) {
-	    // ???
-	    return "redirect:/home";
+	    // TODO
+	    return "redirect:/home?error=" + e.getMessage();
 	  }
 	  
 	  model.addAttribute("user", user);
@@ -507,8 +506,8 @@ public class CalendarController {
 	        .format(DateTimeFormatter.ofPattern("MMMM yyyy"))
 	    );
 	  } catch (Exception e) {
-	    // ???
-	    return "redirect:/home";
+	    // TODO
+	    return "redirect:/home?error=" + e.getMessage();
 	  }
 	  model.addAttribute("showEditDelete", false);
     

@@ -28,7 +28,7 @@ public class DiaryEntryService {
 	public DiaryEntry getById(Long deid) {
 	  Optional<DiaryEntry> dentry = diaryEntryRepository.findById(deid);
 	  if (dentry.isEmpty()) {
-	    throw new IllegalArgumentException("Error: diary entry does not exist");
+	    throw new IllegalArgumentException("Error: diary entry does not exist.");
 	  }
 	  return dentry.get();
 	}
@@ -37,7 +37,7 @@ public class DiaryEntryService {
 	public void saveNewDiaryEntry(DiaryEntryDto dto, String userEmail) {
 		Account user = accountService.getAccountByEmail(userEmail);
 		if (user == null) {
-			throw new IllegalArgumentException("Error: could not verify user");
+			throw new IllegalArgumentException("Error: could not verify user.");
 		}
 		
 		DiaryEntry dentry = new DiaryEntry();
@@ -62,12 +62,12 @@ public class DiaryEntryService {
   public void updateDiaryEntry(Long deid, String userEmail, DiaryEntryDto dto) throws IllegalArgumentException {
     Optional<DiaryEntry> diantry = this.diaryEntryRepository.findById(deid);
     if (diantry.isEmpty()) {
-      throw new IllegalArgumentException("Error: could not find diary entry");
+      throw new IllegalArgumentException("Error: diary entry does not exist.");
     }
     
     DiaryEntry dentry = diantry.get();
     if (!dentry.getDiaryOwner().getEmail().equals(userEmail)) {
-      throw new IllegalArgumentException("Error: user does not have permission to alter diary entry");
+      throw new IllegalArgumentException("Error: user does not have permission to edit diary entry.");
     }
     
     dentry.setDateOfEntry(dto.getDate_of_entry().atStartOfDay());
@@ -80,12 +80,12 @@ public class DiaryEntryService {
 	public void deleteDiaryEntry(Long deid, String userEmail) throws IllegalArgumentException {
 	  Optional<DiaryEntry> diantry = this.diaryEntryRepository.findById(deid);
 	  if (diantry.isEmpty()) {
-	    throw new IllegalArgumentException("Error: could not find diary entry");
+	    throw new IllegalArgumentException("Error: diary entry does not exist.");
 	  }
 	  
 	  DiaryEntry dentry = diantry.get();
 	  if (!dentry.getDiaryOwner().getEmail().equals(userEmail)) {
-	    throw new IllegalArgumentException("Error: user does not have permission to delete diary entry");
+	    throw new IllegalArgumentException("Error: user does not have permission to delete diary entry.");
 	  }
 	  
 	  this.diaryEntryRepository.delete(dentry);
