@@ -19,7 +19,7 @@ public class LoginUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Account user = accountRepository.findByEmail(email);
 		if (user == null) {
-			throw new UsernameNotFoundException(email);
+			throw new UsernameNotFoundException("Error: email already exists.");
 		}
 
 		UserDetails userDetails = User.withUsername(user.getEmail())

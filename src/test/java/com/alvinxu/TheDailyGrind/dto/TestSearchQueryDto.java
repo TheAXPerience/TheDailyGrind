@@ -1,5 +1,14 @@
 package com.alvinxu.TheDailyGrind.dto;
 
-public class TestSearchQueryDto {
+import org.junit.jupiter.api.Test;
 
+public class TestSearchQueryDto {
+  @Test
+  void testQuery() {}
+  
+  @Test
+  void testPage() {}
+  
+  @Test
+  void testSize() {}
 }
