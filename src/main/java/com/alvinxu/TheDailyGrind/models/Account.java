@@ -1,6 +1,7 @@
 package com.alvinxu.TheDailyGrind.models;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,7 +13,7 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 public class Account {
-	@Id
+  @Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
@@ -34,8 +35,20 @@ public class Account {
 	 */
 	@Column(columnDefinition = "varchar(8) default 'USER'")
 	private String authority = "USER";
+	
+	public Account() {}
 
-	public Long getId() {
+	public Account(Long id, String email, String username, String password, LocalDateTime dateOfBirth, String authority) {
+    super();
+    this.id = id;
+    this.email = email;
+    this.username = username;
+    this.password = password;
+    this.dateOfBirth = dateOfBirth;
+    this.authority = authority;
+  }
+
+  public Long getId() {
 		return id;
 	}
 
@@ -81,6 +94,25 @@ public class Account {
 
   public void setDateOfBirth(LocalDateTime dateOfBirth) {
     this.dateOfBirth = dateOfBirth;
+  }
+  
+  @Override
+  public int hashCode() {
+    return Objects.hash(authority, dateOfBirth, email, id, password, username);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Account other = (Account) obj;
+    return Objects.equals(authority, other.authority) && Objects.equals(dateOfBirth, other.dateOfBirth)
+        && Objects.equals(email, other.email) && Objects.equals(id, other.id)
+        && Objects.equals(password, other.password) && Objects.equals(username, other.username);
   }
 	
 }
