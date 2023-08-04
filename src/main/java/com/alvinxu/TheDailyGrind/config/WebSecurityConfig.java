@@ -1,5 +1,6 @@
 package com.alvinxu.TheDailyGrind.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +19,12 @@ import com.alvinxu.TheDailyGrind.security.LoginUserDetailsService;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+  @Autowired
+  private LoginUserDetailsService loginUserDetailsService;
+  
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return new LoginUserDetailsService();
+		return loginUserDetailsService;
 	}
 	
 	@Bean
