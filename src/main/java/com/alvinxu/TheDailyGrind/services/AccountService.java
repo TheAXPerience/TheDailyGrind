@@ -1,10 +1,8 @@
 package com.alvinxu.TheDailyGrind.services;
 
 import java.nio.CharBuffer;
-import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,21 +10,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.alvinxu.TheDailyGrind.dto.RegisterDto;
+import com.alvinxu.TheDailyGrind.exceptions.UsernameAlreadyExistsException;
 import com.alvinxu.TheDailyGrind.models.Account;
 import com.alvinxu.TheDailyGrind.repositories.AccountRepository;
 
 @Service
 public class AccountService {
-	@Autowired
 	private AccountRepository accountRepository;
-	
-	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+	  this.accountRepository = accountRepository;
+	  this.passwordEncoder = passwordEncoder;
+	}
 	
 	public Account getAccountById(Long id) {
 	  Optional<Account> account = this.accountRepository.findById(id);
 	  if (account.isEmpty()) {
-	    throw new IllegalArgumentException("Error: user does not exist.");
+	    return null;
 	  }
 	  return account.get();
 	}
@@ -40,9 +41,9 @@ public class AccountService {
 		return accountRepository.findSimilarToUsername("%" + username + "%", pageable);
 	}
 	
-	public boolean registerNewAccount(RegisterDto registerForm) {
+	public void registerNewAccount(RegisterDto registerForm) throws UsernameAlreadyExistsException {
 		if (getAccountByEmail(registerForm.getEmail()) != null) {
-			return false;
+			throw new UsernameAlreadyExistsException("Error: email is already associated with an account.");
 		}
 		
 		Account user = new Account();
@@ -54,7 +55,5 @@ public class AccountService {
 		user.setAuthority("USER");
 		user.setDateOfBirth(registerForm.getDateOfBirth().atStartOfDay());
 		accountRepository.save(user);
-		
-		return true;
 	}
 }

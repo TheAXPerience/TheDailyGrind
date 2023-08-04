@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.alvinxu.TheDailyGrind.dto.RegisterDto;
+import com.alvinxu.TheDailyGrind.exceptions.UsernameAlreadyExistsException;
 import com.alvinxu.TheDailyGrind.services.AccountService;
 import com.alvinxu.TheDailyGrind.validators.EmailPasswordValidator;
 
@@ -50,11 +51,12 @@ public class AccountController {
 			return "register-form";
 		}
 		
-		if (!this.accountService.registerNewAccount(registerDto)) {
-			// email exists, cannot make account
-			bindingResult.rejectValue("email", "registerDto.email", "The given email already has an account.");
-			model.addAttribute("registerDto", registerDto);
-			return "register-form";
+		try {
+		  this.accountService.registerNewAccount(registerDto);
+		} catch (UsernameAlreadyExistsException e) {
+		  bindingResult.rejectValue("email", "registerDto.email", "The given email already has an account.");
+      model.addAttribute("registerDto", registerDto);
+      return "register-form";
 		}
 		
 		return "redirect:/login?registered=true";

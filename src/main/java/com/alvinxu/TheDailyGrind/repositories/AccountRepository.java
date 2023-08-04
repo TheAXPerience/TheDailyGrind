@@ -13,7 +13,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 	public Account findByEmail(String email);
 	
 	@Query(value="SELECT * FROM account a WHERE a.username LIKE :username"
-	    + " ORDER BY LOCATE(:username, a.username) ASC, a.username ASC",
+	    + " ORDER BY INSTR(:username, a.username) ASC, a.username ASC",
 	    nativeQuery=true
 	)
 	public Page<Account> findSimilarToUsername(String username, Pageable pageable);

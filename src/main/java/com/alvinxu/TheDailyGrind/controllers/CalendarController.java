@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alvinxu.TheDailyGrind.dto.CalendarEventDto;
 import com.alvinxu.TheDailyGrind.dto.DiaryEntryDto;
@@ -32,7 +30,6 @@ import com.alvinxu.TheDailyGrind.models.DiaryEntry;
 import com.alvinxu.TheDailyGrind.services.AccountService;
 import com.alvinxu.TheDailyGrind.services.CalendarEventService;
 import com.alvinxu.TheDailyGrind.services.DiaryEntryService;
-import com.alvinxu.TheDailyGrind.validators.EmailPasswordValidator;
 
 import jakarta.validation.Valid;
 
@@ -61,14 +58,6 @@ public class CalendarController {
 		MonthYearDto monthYearDto = new MonthYearDto();
 		model.addAttribute("monthYearDto", monthYearDto);
 		
-		/*
-		model.addAttribute("events_list",
-					this.calendarEventService.getAllEventsOfAccount(user.getId(), true));
-		
-		model.addAttribute("events_list_nonuser",
-				   this.calendarEventService.getAllEventsOfAccount(user.getId(), false));
-		*/
-		
 		model.addAttribute("events_list_upcoming",
 		    this.calendarEventService.getAllEventsAfterDate(
 		        user.getId(),
@@ -88,13 +77,6 @@ public class CalendarController {
 		        0, 5
         )
 		);
-		
-		/*
-		model.addAttribute("entry_list",
-				   this.diaryEntryService.getAllEventsOfAccount(
-						   user.getId()
-				   )
-		); */
 		
 		model.addAttribute("entry_list_recent",
         this.diaryEntryService.getAllEntriesBeforeDate(
@@ -245,8 +227,6 @@ public class CalendarController {
       model.addAttribute("submitLink", "/new-diary-entry/");
 			return "diary-entry-form";
 		}
-		
-		// System.out.println(calendarEventDto);
 		
 		try {
 		  diaryEntryService.saveNewDiaryEntry(diaryEntryDto, principal.getName());
@@ -459,12 +439,9 @@ public class CalendarController {
 	public String userPage(Model model,
 	    @PathVariable("userId") Long userId
 	) {
-	  Account user;
-	  try {
-	    user = this.accountService.getAccountById(userId);
-	  } catch (Exception e) {
-	    // TODO
-	    return "redirect:/home?error=" + e.getMessage();
+	  Account user = this.accountService.getAccountById(userId);
+	  if (user == null) {
+	    return "redirect:/home?error=Error: user does not exist.";
 	  }
 	  
 	  model.addAttribute("user", user);
@@ -497,18 +474,17 @@ public class CalendarController {
 	    @Valid MonthYearDto monthYearDto,
 	    BindingResult bindingResult
 	) {
-	  try {
-	    Account user = this.accountService.getAccountById(userId);
-	    model.addAttribute("user", user);
-	    model.addAttribute("heading",
-	        user.getUsername() + ": " + monthYearDto
-	        .getMonthYear()
-	        .format(DateTimeFormatter.ofPattern("MMMM yyyy"))
-	    );
-	  } catch (Exception e) {
-	    // TODO
-	    return "redirect:/home?error=" + e.getMessage();
+	  Account user = this.accountService.getAccountById(userId);
+	  if (user == null) {
+	    return "redirect:/home?error=Error: user does not exist.";
 	  }
+	  
+    model.addAttribute("user", user);
+    model.addAttribute("heading",
+        user.getUsername() + ": " + monthYearDto
+            .getMonthYear()
+            .format(DateTimeFormatter.ofPattern("MMMM yyyy"))
+    );
 	  model.addAttribute("showEditDelete", false);
     
     if (bindingResult.hasErrors()) {

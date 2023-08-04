@@ -1,16 +1,16 @@
 package com.alvinxu.TheDailyGrind.services;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.alvinxu.TheDailyGrind.dto.CalendarEventDto;
+import com.alvinxu.TheDailyGrind.exceptions.EventEntryNotFoundException;
 import com.alvinxu.TheDailyGrind.models.Account;
 import com.alvinxu.TheDailyGrind.models.CalendarEvent;
 import com.alvinxu.TheDailyGrind.repositories.CalendarEventRepository;
@@ -19,16 +19,18 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class CalendarEventService {
-	@Autowired
-	CalendarEventRepository calendarEventRepository;
+	private CalendarEventRepository calendarEventRepository;
+	private AccountService accountService;
 	
-	@Autowired
-	AccountService accountService;
+	public CalendarEventService(AccountService accountService, CalendarEventRepository calendarEventRepository) {
+	  this.accountService = accountService;
+	  this.calendarEventRepository = calendarEventRepository;
+	}
 	
 	public CalendarEvent getById(long ceid) {
 		Optional<CalendarEvent> cevent = this.calendarEventRepository.findById(ceid);
 		if (cevent.isEmpty()) {
-			throw new IllegalArgumentException("Error: event does not exist.");
+			throw new EventEntryNotFoundException("Error: event does not exist.");
 		}
 		return cevent.get();
 	}
@@ -37,7 +39,7 @@ public class CalendarEventService {
 	public void saveNewCalendarEvent(String userEmail, CalendarEventDto dto) {
 		Account user = accountService.getAccountByEmail(userEmail);
 		if (user == null) {
-			throw new IllegalArgumentException("Error: could not verify user.");
+			throw new UsernameNotFoundException("Error: could not verify user.");
 		}
 		
 		CalendarEvent cevent = new CalendarEvent();
@@ -51,17 +53,18 @@ public class CalendarEventService {
 	}
 	
 	@Transactional
-	public void updateCalendarEvent(long ceid, String userEmail, CalendarEventDto edited) {
+	public void updateCalendarEvent(long ceid, String userEmail, CalendarEventDto edited)
+	    throws EventEntryNotFoundException, IllegalAccessException {
 		Optional<CalendarEvent> calvent = this.calendarEventRepository.findById(ceid);
 		if (calvent.isEmpty()) {
 			// placeholder exception: could not find event
-			throw new IllegalArgumentException("Error: event does not exist.");
+			throw new EventEntryNotFoundException("Error: event does not exist.");
 		}
 		
 		CalendarEvent cevent = calvent.get();
 		if (!cevent.getEventOrganizer().getEmail().equals(userEmail)) {
 			// placeholder exception: user trying to edit an event they do not own
-			throw new IllegalArgumentException("Error: user does not have permission to edit event.");
+			throw new IllegalAccessException("Error: user does not have permission to edit event.");
 		}
 		
 		// update event using information from DTO
@@ -74,17 +77,17 @@ public class CalendarEventService {
 	}
 	
 	@Transactional
-	public void deleteCalendarEvent(long ceid, String userEmail) {
+	public void deleteCalendarEvent(long ceid, String userEmail) throws EventEntryNotFoundException, IllegalAccessException {
 	  Optional<CalendarEvent> calvent = this.calendarEventRepository.findById(ceid);
     if (calvent.isEmpty()) {
       // placeholder exception: could not find event
-      throw new IllegalArgumentException("Error: event does not exist.");
+      throw new EventEntryNotFoundException("Error: event does not exist.");
     }
     
     CalendarEvent cevent = calvent.get();
     if (!cevent.getEventOrganizer().getEmail().equals(userEmail)) {
       // placeholder exception: user trying to edit an event they do not own
-      throw new IllegalArgumentException("Error: user does not have permission to delete event.");
+      throw new IllegalAccessException("Error: user does not have permission to delete event.");
     }
     
     this.calendarEventRepository.delete(cevent);

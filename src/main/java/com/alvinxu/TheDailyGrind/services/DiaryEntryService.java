@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.alvinxu.TheDailyGrind.dto.DiaryEntryDto;
+import com.alvinxu.TheDailyGrind.exceptions.EventEntryNotFoundException;
 import com.alvinxu.TheDailyGrind.models.Account;
 import com.alvinxu.TheDailyGrind.models.DiaryEntry;
 import com.alvinxu.TheDailyGrind.repositories.DiaryEntryRepository;
@@ -18,17 +20,19 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class DiaryEntryService {
-	@Autowired
-	DiaryEntryRepository diaryEntryRepository;
+	private DiaryEntryRepository diaryEntryRepository;
+	private AccountService accountService;
 	
-	@Autowired
-	AccountService accountService;
+	public DiaryEntryService(AccountService accountService, DiaryEntryRepository diaryEntryRepository) {
+	  this.accountService = accountService;
+	  this.diaryEntryRepository = diaryEntryRepository;
+	}
 	
 	@Transactional
 	public DiaryEntry getById(Long deid) {
 	  Optional<DiaryEntry> dentry = diaryEntryRepository.findById(deid);
 	  if (dentry.isEmpty()) {
-	    throw new IllegalArgumentException("Error: diary entry does not exist.");
+	    throw new EventEntryNotFoundException("Error: diary entry does not exist.");
 	  }
 	  return dentry.get();
 	}
@@ -37,7 +41,7 @@ public class DiaryEntryService {
 	public void saveNewDiaryEntry(DiaryEntryDto dto, String userEmail) {
 		Account user = accountService.getAccountByEmail(userEmail);
 		if (user == null) {
-			throw new IllegalArgumentException("Error: could not verify user.");
+			throw new UsernameNotFoundException("Error: could not verify user.");
 		}
 		
 		DiaryEntry dentry = new DiaryEntry();
@@ -59,15 +63,15 @@ public class DiaryEntryService {
 	}
 	
   @Transactional
-  public void updateDiaryEntry(Long deid, String userEmail, DiaryEntryDto dto) throws IllegalArgumentException {
+  public void updateDiaryEntry(Long deid, String userEmail, DiaryEntryDto dto) throws IllegalArgumentException, IllegalAccessException {
     Optional<DiaryEntry> diantry = this.diaryEntryRepository.findById(deid);
     if (diantry.isEmpty()) {
-      throw new IllegalArgumentException("Error: diary entry does not exist.");
+      throw new EventEntryNotFoundException("Error: diary entry does not exist.");
     }
     
     DiaryEntry dentry = diantry.get();
     if (!dentry.getDiaryOwner().getEmail().equals(userEmail)) {
-      throw new IllegalArgumentException("Error: user does not have permission to edit diary entry.");
+      throw new IllegalAccessException("Error: user does not have permission to edit diary entry.");
     }
     
     dentry.setDateOfEntry(dto.getDate_of_entry().atStartOfDay());
@@ -77,15 +81,15 @@ public class DiaryEntryService {
   }
 	
 	@Transactional
-	public void deleteDiaryEntry(Long deid, String userEmail) throws IllegalArgumentException {
+	public void deleteDiaryEntry(Long deid, String userEmail) throws IllegalArgumentException, IllegalAccessException {
 	  Optional<DiaryEntry> diantry = this.diaryEntryRepository.findById(deid);
 	  if (diantry.isEmpty()) {
-	    throw new IllegalArgumentException("Error: diary entry does not exist.");
+	    throw new EventEntryNotFoundException("Error: diary entry does not exist.");
 	  }
 	  
 	  DiaryEntry dentry = diantry.get();
 	  if (!dentry.getDiaryOwner().getEmail().equals(userEmail)) {
-	    throw new IllegalArgumentException("Error: user does not have permission to delete diary entry.");
+	    throw new IllegalAccessException("Error: user does not have permission to delete diary entry.");
 	  }
 	  
 	  this.diaryEntryRepository.delete(dentry);
