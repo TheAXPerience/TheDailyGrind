@@ -1,6 +1,7 @@
 package com.alvinxu.TheDailyGrind.dto;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestSearchQueryDtoValidation {
   private SearchQueryDto dto;
@@ -13,10 +14,12 @@ public class TestSearchQueryDtoValidation {
     dto.setSize(10);
   }
   
+  @Test
   void testValidation() {
     
   }
   
+  @Test
   void testQueryNotEmpty() {
     dto.setQuery("");
   }

@@ -3,6 +3,7 @@ package com.alvinxu.TheDailyGrind.dto;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestCalendarEventDtoValidation {
   private CalendarEventDto dto;
@@ -17,20 +18,22 @@ public class TestCalendarEventDtoValidation {
     dto.setCompleteToggle(false);
   }
 
+  @Test
   void testValidation() {
     
   }
   
+  @Test
   void testDateOfEventNotNull() {
     dto.setDateOfEvent(null);
   }
   
-  // min = 1
+  @Test
   void testTitleSizeTooSmall() {
     dto.setTitle("");
   }
   
-  // max = 200
+  @Test
   void testTitleSizeTooLarge() {
     dto.setTitle("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
   }

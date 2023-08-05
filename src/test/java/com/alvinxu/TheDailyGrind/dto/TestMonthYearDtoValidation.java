@@ -3,6 +3,7 @@ package com.alvinxu.TheDailyGrind.dto;
 import java.time.YearMonth;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestMonthYearDtoValidation {
   private MonthYearDto dto;
@@ -17,10 +18,12 @@ public class TestMonthYearDtoValidation {
     dto.setDiarySize(10);
   }
   
+  @Test
   void testValidation() {
     
   }
   
+  @Test
   void testMonthYearNotNull() {
     dto.setMonthYear(null);
   }
