@@ -28,7 +28,7 @@ import com.alvinxu.TheDailyGrind.repositories.DiaryEntryRepository;
 
 @DataJpaTest
 @TestInstance(Lifecycle.PER_CLASS)
-public class IntegrationTestDiaryEntryService {
+public class TestDiaryEntryServiceIntegration {
   @Autowired private DiaryEntryRepository repository;
   @Autowired private AccountRepository accRepository;
   private AccountService accounts;

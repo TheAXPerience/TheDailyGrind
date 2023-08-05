@@ -17,7 +17,7 @@ import com.alvinxu.TheDailyGrind.models.Account;
 import com.alvinxu.TheDailyGrind.repositories.AccountRepository;
 
 @DataJpaTest
-public class IntegrationTestLoginUserDetailsService {
+public class TestLoginUserDetailsServiceIntegration {
   @Autowired private AccountRepository accountRepository;
   private LoginUserDetailsService underTest;
   

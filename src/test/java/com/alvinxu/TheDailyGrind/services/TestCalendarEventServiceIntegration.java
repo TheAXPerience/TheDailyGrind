@@ -27,7 +27,7 @@ import com.alvinxu.TheDailyGrind.repositories.CalendarEventRepository;
 
 @DataJpaTest
 @TestInstance(Lifecycle.PER_CLASS)
-public class IntegrationTestCalendarEventService {
+public class TestCalendarEventServiceIntegration {
   @Autowired private CalendarEventRepository repository;
   @Autowired private AccountRepository accRepository;
   private AccountService accounts;

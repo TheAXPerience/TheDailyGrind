@@ -26,7 +26,7 @@ import com.alvinxu.TheDailyGrind.repositories.AccountRepository;
 
 @DataJpaTest
 @TestInstance(Lifecycle.PER_CLASS)
-public class IntegrationTestAccountService {
+public class TestAccountServiceIntegration {
   @Autowired private AccountRepository accountRepository;
   private PasswordEncoder passwordEncoder;
   private AccountService underTest;
