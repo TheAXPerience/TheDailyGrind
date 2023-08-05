@@ -20,11 +20,11 @@ public class RegisterDto {
 	@EmailValidatorConstraint(message="{email.already.exists}")
 	private String email;
 	
-	@Size(min=3, max=255, message="{username.size}")
+	@Size(min=3, max=200, message="{username.size}")
 	private String username;
 	
 	@PasswordValidatorConstraint(message="{password.not.valid}")
-	@Size(min=8, max=255, message="{password.size}")
+	@Size(min=8, max=200, message="{password.size}")
 	private char[] password;
 	
 	@Past(message="{date.of.birth.future}")
