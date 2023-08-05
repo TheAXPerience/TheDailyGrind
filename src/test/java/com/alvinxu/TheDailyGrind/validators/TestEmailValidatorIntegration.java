@@ -18,7 +18,7 @@ import com.alvinxu.TheDailyGrind.services.AccountService;
 
 @DataJpaTest
 @TestInstance(Lifecycle.PER_CLASS)
-public class IntegrationTestEmailValidator {
+public class TestEmailValidatorIntegration {
   @Autowired private AccountRepository repository;
   private AccountService service;
   private EmailValidator validator;
