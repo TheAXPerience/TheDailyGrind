@@ -12,6 +12,10 @@ public class EmailValidator implements ConstraintValidator<EmailValidatorConstra
     this.accountService = accountService;
   }
   
+  public void setAccountService(AccountService accountService) {
+    this.accountService = accountService;
+  }
+  
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
     return this.accountService.getAccountByEmail(value) == null;
