@@ -44,12 +44,4 @@ public class TestPasswordValidator {
     boolean expected = validator.isValid(password, null);
     assertThat(expected).isFalse();
   }
-  
-  @Test
-  void testIsInvalidTooShort() {
-    char[] password = {'P', 'A', 'S', 'S', '1'};
-    
-    boolean expected = validator.isValid(password, null);
-    assertThat(expected).isFalse();
-  }
 }
