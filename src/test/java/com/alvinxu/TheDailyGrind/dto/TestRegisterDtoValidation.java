@@ -18,12 +18,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.bind.support.SpringWebConstraintValidatorFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+// import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.alvinxu.TheDailyGrind.models.Account;
 import com.alvinxu.TheDailyGrind.repositories.AccountRepository;
-import com.alvinxu.TheDailyGrind.services.AccountService;
+// import com.alvinxu.TheDailyGrind.services.AccountService;
 import com.alvinxu.TheDailyGrind.validators.EmailValidator;
 
 import jakarta.validation.ConstraintValidator;
@@ -34,7 +35,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
 @ExtendWith(SpringExtension.class)
-@DataJpaTest
+@SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
 public class TestRegisterDtoValidation {
   @Autowired AccountRepository repository;
@@ -46,21 +47,20 @@ public class TestRegisterDtoValidation {
   private Validator validator;
   
   private class MockConstraintValidatorFactory extends SpringWebConstraintValidatorFactory {
-    private AccountService service;
+    // private AccountService service;
     private WebApplicationContext ctx;
     
-    public MockConstraintValidatorFactory(WebApplicationContext wac, AccountService service) {
+    public MockConstraintValidatorFactory(WebApplicationContext wac/*, AccountService service */) {
       this.ctx = wac;
-      this.service = service;
+      // this.service = service;
     }
     
     @Override
     public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
-      // TODO Auto-generated method stub
       ConstraintValidator instance = super.getInstance(key);
       if (instance instanceof EmailValidator) {
         EmailValidator v = (EmailValidator) instance;
-        v.setAccountService(this.service);
+        // v.setAccountService(this.service);
         instance = v;
       }
       return (T) instance;
@@ -75,8 +75,8 @@ public class TestRegisterDtoValidation {
   
   @BeforeAll
   void factorySetup() {
-    AccountService service = new AccountService(repository, new BCryptPasswordEncoder());
-    ConstraintValidatorFactory cvf = new MockConstraintValidatorFactory(wac, service);
+    /* AccountService service = new AccountService(repository, new BCryptPasswordEncoder()); */
+    ConstraintValidatorFactory cvf = new MockConstraintValidatorFactory(wac/*, service*/);
     
     factory = Validation.buildDefaultValidatorFactory();
     validator = factory.usingContext()
