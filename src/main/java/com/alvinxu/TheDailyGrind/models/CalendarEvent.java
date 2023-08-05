@@ -1,7 +1,7 @@
 package com.alvinxu.TheDailyGrind.models;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.Objects;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
@@ -18,7 +18,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
@@ -133,4 +132,27 @@ public class CalendarEvent {
 	public void setPublic(boolean isPublic) {
 		this.isPublic = isPublic;
 	}
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(dateCreated, dateOfEvent, dateUpdated, description, eventOrganizer, id, isComplete, isPublic,
+        title);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    CalendarEvent other = (CalendarEvent) obj;
+    return Objects.equals(dateCreated, other.dateCreated) && Objects.equals(dateOfEvent, other.dateOfEvent)
+        && Objects.equals(dateUpdated, other.dateUpdated) && Objects.equals(description, other.description)
+        && Objects.equals(eventOrganizer, other.eventOrganizer) && Objects.equals(id, other.id)
+        && isComplete == other.isComplete && isPublic == other.isPublic && Objects.equals(title, other.title);
+  }
+	
+	
 }

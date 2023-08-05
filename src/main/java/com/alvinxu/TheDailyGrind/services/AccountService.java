@@ -38,7 +38,7 @@ public class AccountService {
 	
 	public Page<Account> getAccountsLikeUsername(String username, int page, int size) {
 	  Pageable pageable = PageRequest.of(page, size);
-		return accountRepository.findSimilarToUsername("%" + username + "%", pageable);
+		return accountRepository.findSimilarToUsername(username, pageable);
 	}
 	
 	public void registerNewAccount(RegisterDto registerForm) throws UsernameAlreadyExistsException {

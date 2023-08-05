@@ -12,7 +12,7 @@ import com.alvinxu.TheDailyGrind.models.Account;
 public interface AccountRepository extends JpaRepository<Account, Long> {
 	public Account findByEmail(String email);
 	
-	@Query(value="SELECT * FROM account a WHERE a.username LIKE :username"
+	@Query(value="SELECT * FROM account a WHERE a.username ILIKE %:username%"
 	    + " ORDER BY INSTR(:username, a.username) ASC, a.username ASC",
 	    nativeQuery=true
 	)

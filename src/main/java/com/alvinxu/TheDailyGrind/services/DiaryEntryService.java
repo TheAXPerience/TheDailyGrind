@@ -53,7 +53,7 @@ public class DiaryEntryService {
 	}
 	
 	@Transactional
-	public Page<DiaryEntry> getAllEventsOfAccount(
+	public Page<DiaryEntry> getAllEntriesOfAccount(
 	    Long userId,
 	    int page,
 	    int size

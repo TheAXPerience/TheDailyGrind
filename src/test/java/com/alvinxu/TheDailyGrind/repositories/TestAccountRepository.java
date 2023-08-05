@@ -68,7 +68,7 @@ public class TestAccountRepository {
     user2.setUsername("username2");
     user2.setPassword("password2");
     user2.setEmail("hello@jank");
-    user2.setDateOfBirth(LocalDateTime.of(2013,  4, 20, 6, 9));
+    user2.setDateOfBirth(LocalDateTime.of(2013, 4, 20, 6, 9));
     user2.setAuthority("USER2");
     underTest.save(user2);
     
@@ -98,7 +98,7 @@ public class TestAccountRepository {
     
     // when
     Pageable pageable = PageRequest.of(0, 5);
-    Page<Account> result = underTest.findSimilarToUsername("%user%", pageable);
+    Page<Account> result = underTest.findSimilarToUsername("user", pageable);
     
     // then
     List<Account> resultList = result.getContent();
