@@ -1,18 +1,40 @@
 server:
   port: 3000
 
+
+# NON-DOCKER SETTINGS
+
+#spring:
+#  mvc:
+#    hiddenmethod:
+#      filter:
+#        enabled: true
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/planmyday
+#    username: mysql_usr
+#    password: mysql_pwd
+#  jpa:
+#    hibernate:
+#      ddl-auto: create-drop
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQLDialect
+#        format-sql: true
+#      show-sql: true
+#  main:
+#    web-application-type: servlet
+
+
+# DOCKER SETTINGS, WITH ENVIRONMENT VARIABLES
+
 spring:
   mvc:
     hiddenmethod:
       filter:
         enabled: true
-  datasource:
-    url: jdbc:mysql://localhost:3306/planmyday
-    username: mysql_usr
-    password: mysql_pwd
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect

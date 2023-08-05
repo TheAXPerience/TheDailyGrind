@@ -1,7 +1,6 @@
 version: '3.1'
 
 services:
-
   db:
     image: mysql
     restart: always
@@ -11,9 +10,9 @@ services:
       - mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: planmyday
-      MYSQL_USER: mysql_usr
-      MYSQL_PASSWORD: mysql_pwd
+      MYSQL_DATABASE: thedailygrind
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: password
 
   adminer:
     image: adminer
@@ -22,6 +21,24 @@ services:
       ADMINER_DEFAULT_SERVER: db
     ports:
       - 8081:8080
+
+  thedailygrind:
+    container_name: app
+    image: thedailygrind:latest
+    build:
+      context: .
+    environment:
+    - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/thedailygrind
+    - SPRING_DATASOURCE_USERNAME=mysql
+    - SPRING_DATASOURCE_PASSWORD=password
+    - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+    - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+    - db
 
 volumes:
   mysql:
