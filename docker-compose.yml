@@ -11,8 +11,13 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: thedailygrind
-      MYSQL_USER: mysql
-      MYSQL_PASSWORD: password
+      MYSQL_USER: mysql_usr
+      MYSQL_PASSWORD: mysql_pwd
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   adminer:
     image: adminer
@@ -24,21 +29,19 @@ services:
 
   thedailygrind:
     container_name: app
-    image: thedailygrind:latest
+    image: docker.io/axperience/thedailygrind:0.0.1
     build:
       context: .
     environment:
     - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/thedailygrind
-    - SPRING_DATASOURCE_USERNAME=mysql
-    - SPRING_DATASOURCE_PASSWORD=password
+    - SPRING_DATASOURCE_USERNAME=mysql_usr
+    - SPRING_DATASOURCE_PASSWORD=mysql_pwd
     - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
     - "3000:3000"
     depends_on:
       db:
         condition: service_healthy
-    networks:
-    - db
 
 volumes:
   mysql:
